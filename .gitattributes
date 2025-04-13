@@ -1,2 +1,8 @@
 public/wasm/capture.worker.js linguist-language=Vue
 public/wasm/index.js linguist-language=Vue
+
+# 对所有文本文件自动处理换行符，按系统默认转换
+* text=auto
+
+# 强制 TypeScript 文件使用 LF（适用于跨平台项目）
+*.ts text eol=lf
