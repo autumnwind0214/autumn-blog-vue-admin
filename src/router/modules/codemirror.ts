@@ -7,7 +7,7 @@ export default {
   meta: {
     icon: "ri/code-box-line",
     title: $t("menus.pureCodeMirror"),
-    rank: codemirror
+    sort: codemirror
   },
   children: [
     {

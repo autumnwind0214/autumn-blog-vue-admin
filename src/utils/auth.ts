@@ -103,6 +103,7 @@ export function setToken(data: AccessToken) {
 
 /** todo 保存用户信息 */
 export function setUserInfo(data: UserInfo) {
+  data.roles = ["admin"];
   storageLocal().setItem(userKey, JSON.stringify(data));
 }
 

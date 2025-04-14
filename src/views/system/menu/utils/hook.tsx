@@ -77,7 +77,7 @@ export function useMenu() {
     },
     {
       label: "排序",
-      prop: "rank",
+      prop: "sort",
       width: 100
     },
     {
@@ -143,7 +143,7 @@ export function useMenu() {
           name: row?.name ?? "",
           path: row?.path ?? "",
           component: row?.component ?? "",
-          rank: row?.rank ?? 99,
+          sort: row?.sort ?? 99,
           redirect: row?.redirect ?? "",
           icon: row?.icon ?? "",
           extraIcon: row?.extraIcon ?? "",

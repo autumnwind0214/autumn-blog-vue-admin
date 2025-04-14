@@ -8,7 +8,7 @@ export default {
     icon: "ri/information-line",
     // showLink: false,
     title: $t("menus.pureAbnormal"),
-    rank: error
+    sort: error
   },
   children: [
     {

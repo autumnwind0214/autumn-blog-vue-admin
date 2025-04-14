@@ -8,7 +8,7 @@
 | `name`            | 路由名称（必须唯一并且和当前路由`component`字段对应的页面里用`defineOptions`包起来的`name`保持一致） |
 | `path`            | 路由路径                                                     |
 | `component`       | 组件路径（传`component`组件路径，那么`path`可以随便写，如果不传，`component`组件路径会跟`path`保持一致） |
-| `rank`            | 菜单排序（平台规定只有`home`路由的`rank`才能为`0`，所以后端在返回`rank`的时候需要从非`0`开始 [点击查看更多](https://pure-admin.cn/pages/routerMenu/#%E8%8F%9C%E5%8D%95%E6%8E%92%E5%BA%8F-rank)） |
+| `sort`            | 菜单排序（平台规定只有`home`路由的`rank`才能为`0`，所以后端在返回`rank`的时候需要从非`0`开始 [点击查看更多](https://pure-admin.cn/pages/routerMenu/#%E8%8F%9C%E5%8D%95%E6%8E%92%E5%BA%8F-rank)） |
 | `redirect`        | 路由重定向                                                   |
 | `icon`            | 菜单图标                                                     |
 | `extraIcon`       | 右侧图标                                                     |

@@ -1,12 +1,8 @@
 export type Menu = {
-  /** 唯一id */
-  id: number;
   /** 菜单类型 101: 目录 102: 菜单 103: 按钮 */
-  menuType: number;
+  menuType: MenuType;
   /** 元数据 */
   meta: Meta;
-  /** 父级id */
-  parentId: number;
   /** 菜单名称 */
   name: string;
   /** 菜单图标 */
@@ -17,8 +13,6 @@ export type Menu = {
   permission: string;
   /** 菜单排序 */
   sort: number;
-  /** 菜单级别 */
-  rank: number;
   /** 子级 */
   children: Array<Menu>;
 };
@@ -27,5 +21,13 @@ export type Meta = {
   icon: string;
   sort: number;
   title: string;
-  rank: number;
+  auths: [];
+  showLink: boolean;
+  roles: [];
 };
+
+enum MenuType {
+  DIRECTORY = 101,
+  MENU = 102,
+  BUTTON = 103
+}

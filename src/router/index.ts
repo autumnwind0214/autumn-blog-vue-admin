@@ -12,7 +12,6 @@ import {
   ascending,
   getTopMenu,
   initRouter,
-  isOneOfArray,
   getHistoryMode,
   findRouteByPath,
   handleAliveRoute,
@@ -33,7 +32,8 @@ import type { UserInfo } from "@/api/types/system/user";
  * 如何排除文件请看：https://cn.vitejs.dev/guide/features.html#negative-patterns
  */
 const modules: Record<string, any> = import.meta.glob(
-  ["./modules/**/*.ts", "!./modules/**/remaining.ts"],
+  // ["./modules/**/*.ts", "!./modules/**/remaining.ts"],
+  ["./modules/**/home.ts", "!./modules/**/remaining.ts"],
   {
     eager: true
   }
