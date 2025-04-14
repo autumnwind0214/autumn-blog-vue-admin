@@ -33,6 +33,10 @@ export type UserInfo = {
   phone: string;
   /** 简介 */
   description: string;
+  /** 按钮级别权限 */
+  permissions: Array<string>;
+  /** 当前登录用户的角色 */
+  roles: Array<string>;
 };
 
 export type ResultTable = {

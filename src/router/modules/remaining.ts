@@ -9,7 +9,7 @@ export default [
     meta: {
       title: $t("menus.pureLogin"),
       showLink: false,
-      rank: 101
+      sort: 101
     }
   },
   {
@@ -18,7 +18,7 @@ export default [
     meta: {
       title: $t("status.pureLoad"),
       showLink: false,
-      rank: 102
+      sort: 102
     },
     children: [
       {
@@ -36,7 +36,7 @@ export default [
     meta: {
       title: $t("menus.pureEmpty"),
       showLink: false,
-      rank: 103
+      sort: 103
     }
   },
   {
@@ -46,7 +46,7 @@ export default [
     meta: {
       title: $t("buttons.pureAccountSettings"),
       showLink: false,
-      rank: 104
+      sort: 104
     }
   },
   {
@@ -56,7 +56,7 @@ export default [
     meta: {
       title: $t("menus.hsCode"),
       showLink: false,
-      rank: 105
+      sort: 105
     }
   }
 ] satisfies Array<RouteConfigsTable>;

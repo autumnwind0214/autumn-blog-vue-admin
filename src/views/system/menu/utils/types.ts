@@ -7,7 +7,7 @@ interface FormItemProps {
   name: string;
   path: string;
   component: string;
-  rank: number;
+  sort: number;
   redirect: string;
   icon: string;
   extraIcon: string;

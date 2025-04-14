@@ -18,10 +18,10 @@ import {
 } from "@pureadmin/utils";
 import { getConfig } from "@/config";
 import { buildHierarchyTree } from "@/utils/tree";
-import { userKey, type DataInfo } from "@/utils/auth";
 import { type menuType, routerArrays } from "@/layout/types";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+
 const IFrame = () => import("@/layout/frame.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
@@ -29,26 +29,28 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 // 动态路由
 import { getAsyncRoutes } from "@/api/modules/system/routes";
 import type { Menu } from "@/api/types/system/routes";
+import type { UserInfo } from "@/api/types/system/user";
+import { userKey } from "@/utils/auth";
 
-function handRank(routeInfo: any) {
+function handSort(routeInfo: any) {
   const { name, path, parentId, meta } = routeInfo;
   return isAllEmpty(parentId)
-    ? isAllEmpty(meta?.rank) ||
-      (meta?.rank === 0 && name !== "Home" && path !== "/")
+    ? isAllEmpty(meta?.sort) ||
+    (meta?.sort === 0 && name !== "Home" && path !== "/")
       ? true
       : false
     : false;
 }
 
-/** 按照路由中meta下的rank等级升序来排序路由 */
+/** 按照路由中meta下的sort等级升序来排序路由 */
 function ascending(arr: any[]) {
   arr.forEach((v, index) => {
-    // 当rank不存在时，根据顺序自动创建，首页路由永远在第一位
-    if (handRank(v)) v.meta.rank = index + 2;
+    // 当sort不存在时，根据顺序自动创建，首页路由永远在第一位
+    if (handSort(v)) v.meta.sort = index + 2;
   });
   return arr.sort(
-    (a: { meta: { rank: number } }, b: { meta: { rank: number } }) => {
-      return a?.meta.rank - b?.meta.rank;
+    (a: { meta: { sort: number } }, b: { meta: { sort: number } }) => {
+      return a?.meta.sort - b?.meta.sort;
     }
   );
 }
@@ -66,7 +68,8 @@ function filterTree(data: RouteComponent[]) {
 
 /** 过滤children长度为0的的目录，当目录下没有菜单时，会过滤此目录，目录没有赋予roles权限，当目录下只要有一个菜单有显示权限，那么此目录就会显示 */
 function filterChildrenTree(data: RouteComponent[]) {
-  const newTree = cloneDeep(data).filter((v: any) => v?.children?.length !== 0);
+  // const newTree = cloneDeep(data).filter((v: any) => v?.children?.length !== 0);
+  const newTree = cloneDeep(data);
   newTree.forEach(
     (v: { children }) => v.children && (v.children = filterTree(v.children))
   );
@@ -84,14 +87,16 @@ function isOneOfArray(a: Array<string>, b: Array<string>) {
 
 /** 从localStorage里取出当前登录用户的角色roles，过滤无权限的菜单 */
 function filterNoPermissionTree(data: RouteComponent[]) {
-  const currentRoles =
-    storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [];
-  const newTree = cloneDeep(data).filter((v: any) =>
-    isOneOfArray(v.meta?.roles, currentRoles)
-  );
-  newTree.forEach(
-    (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
-  );
+  const currentRoles = storageLocal().getItem<UserInfo>(userKey)?.roles ?? [
+    "admin"
+  ];
+  const newTree = cloneDeep(data).filter((v: any) => {
+    return isOneOfArray(v.meta?.roles, currentRoles);
+  });
+  // console.log(newTree);
+  newTree.forEach((v: any) => {
+    v.children && (v.children = filterNoPermissionTree(v.children));
+  });
   return filterChildrenTree(newTree);
 }
 
@@ -213,7 +218,6 @@ function initRouter() {
   } else {
     return new Promise(resolve => {
       getAsyncRoutes().then((data: Array<Menu>) => {
-        console.log("data: ", data);
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });
