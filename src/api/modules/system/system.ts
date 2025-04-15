@@ -1,4 +1,6 @@
 import { http } from "@/utils/http";
+import { MenuVo } from "@/api/types/system/routes";
+const prefix = "/system-api";
 
 type Result = {
   success: boolean;
@@ -40,8 +42,8 @@ export const getRoleList = (data?: object) => {
 };
 
 /** 获取系统管理-菜单管理列表 */
-export const getMenuList = (data?: object) => {
-  return http.request<Result>("post", "/menu", { data });
+export const getMenuList = () => {
+  return http.request<Array<MenuVo>>("get", `${prefix}/menu/getMenuList`);
 };
 
 /** 获取系统管理-部门管理列表 */

@@ -1,6 +1,6 @@
-export type Menu = {
-  /** 菜单类型 101: 目录 102: 菜单 103: 按钮 */
-  menuType: MenuType;
+export type RouteVo = {
+  /** 菜单类型 `0`代表菜单、`1`代表`iframe`、`2`代表外链、`3`代表按钮 */
+  menuType: number;
   /** 元数据 */
   meta: Meta;
   /** 菜单名称 */
@@ -14,7 +14,31 @@ export type Menu = {
   /** 菜单排序 */
   sort: number;
   /** 子级 */
-  children: Array<Menu>;
+  children: Array<RouteVo>;
+};
+
+export type MenuVo = {
+  menuType: number;
+  parentId: number;
+  title: string;
+  name: string;
+  path: string;
+  component: string;
+  sort: number;
+  redirect: string;
+  icon: string;
+  extraIcon: string;
+  enterTransition: string;
+  leaveTransition: string;
+  activePath: string;
+  auths: string;
+  frameSrc: string;
+  frameLoading: boolean;
+  keepAlive: boolean;
+  hiddenTag: boolean;
+  fixedTag: boolean;
+  showLink: boolean;
+  showParent: boolean;
 };
 
 export type Meta = {
@@ -27,7 +51,8 @@ export type Meta = {
 };
 
 enum MenuType {
-  DIRECTORY = 101,
-  MENU = 102,
-  BUTTON = 103
+  MENU = 0,
+  IFRAME = 1,
+  BACKLINK = 2,
+  BUTTON = 3
 }

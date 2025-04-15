@@ -59,5 +59,6 @@ export const checkStatus = (status: number, msg?: string) => {
       break;
     default:
       message(msg || "请求失败！", { type: "error" });
+      break;
   }
 };

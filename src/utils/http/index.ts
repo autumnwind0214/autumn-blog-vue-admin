@@ -129,8 +129,9 @@ class PureHttp {
         // 关闭进度条动画
         NProgress.done();
         if (response.data.code !== SUCCESS) {
+          console.log(response.data);
           checkStatus(response.data.code, response.data.msg);
-          return Promise.reject(response.data);
+          throw new Error("请求失败，请稍后重试");
         }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {

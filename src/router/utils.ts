@@ -28,7 +28,7 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
 import { getAsyncRoutes } from "@/api/modules/system/routes";
-import type { Menu } from "@/api/types/system/routes";
+import type { RouteVo } from "@/api/types/system/routes";
 import type { UserInfo } from "@/api/types/system/user";
 import { userKey } from "@/utils/auth";
 
@@ -208,7 +208,7 @@ function initRouter() {
       });
     } else {
       return new Promise(resolve => {
-        getAsyncRoutes().then((data: Array<Menu>) => {
+        getAsyncRoutes().then((data: Array<RouteVo>) => {
           handleAsyncRoutes(cloneDeep(data));
           storageLocal().setItem(key, data);
           resolve(router);
@@ -217,7 +217,7 @@ function initRouter() {
     }
   } else {
     return new Promise(resolve => {
-      getAsyncRoutes().then((data: Array<Menu>) => {
+      getAsyncRoutes().then((data: Array<RouteVo>) => {
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });
