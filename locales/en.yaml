@@ -19,6 +19,16 @@ buttons:
   pureBackTop: BackTop
   pureOpenText: Open
   pureCloseText: Close
+  pureAddUser: Add User
+  pureUserEdit: Edit User
+  pureUserDelete: Delete User
+  pureRoleAdd: Add Role
+  pureRoleEdit: Edit Role
+  pureRoleDelete: Delete Role
+  pureRolePermission: Permission Role
+  pureMenuAdd: Add Menu
+  pureMenuEdit: Edit Menu
+  pureMenuDelete: Delete Menu
 search:
   pureTotal: Total
   pureHistory: History

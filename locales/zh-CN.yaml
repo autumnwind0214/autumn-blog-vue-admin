@@ -19,6 +19,16 @@ buttons:
   pureBackTop: 回到顶部
   pureOpenText: 开
   pureCloseText: 关
+  pureUserAdd: 新增用户
+  pureUserEdit: 编辑用户
+  pureUserDelete: 删除用户
+  pureRoleAdd: 新增角色
+  pureRoleEdit: 编辑角色
+  pureRoleDelete: 删除角色
+  pureRolePermission: 角色权限
+  pureMenuAdd: 新增菜单
+  pureMenuEdit: 编辑菜单
+  pureMenuDelete: 删除菜单
 search:
   pureTotal: 共
   pureHistory: 搜索历史
