@@ -1,4 +1,5 @@
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { getCaptcha } from "@/api/login";
 
 /**
  * 绘制图形验证码
@@ -8,6 +9,7 @@ import { ref, onMounted } from "vue";
 export const useImageVerify = (width = 120, height = 40) => {
   const domRef = ref<HTMLCanvasElement>();
   const imgCode = ref("");
+  const captchaId = ref("");
 
   function setImgCode(code: string) {
     imgCode.value = code;
@@ -15,7 +17,11 @@ export const useImageVerify = (width = 120, height = 40) => {
 
   function getImgCode() {
     if (!domRef.value) return;
-    imgCode.value = draw(domRef.value, width, height);
+    getCaptcha().then((result: any) => {
+      imgCode.value = result.code;
+      captchaId.value = result.captchaId;
+      draw(domRef.value, width, height, imgCode.value);
+    });
   }
 
   onMounted(() => {
@@ -31,8 +37,7 @@ export const useImageVerify = (width = 120, height = 40) => {
 };
 
 function randomNum(min: number, max: number) {
-  const num = Math.floor(Math.random() * (max - min) + min);
-  return num;
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
 function randomColor(min: number, max: number) {
@@ -42,26 +47,26 @@ function randomColor(min: number, max: number) {
   return `rgb(${r},${g},${b})`;
 }
 
-function draw(dom: HTMLCanvasElement, width: number, height: number) {
-  let imgCode = "";
-
-  const NUMBER_STRING = "0123456789";
-
+function draw(
+  dom: HTMLCanvasElement,
+  width: number,
+  height: number,
+  imgCode: string
+) {
   const ctx = dom.getContext("2d");
   if (!ctx) return imgCode;
 
   ctx.fillStyle = randomColor(180, 230);
   ctx.fillRect(0, 0, width, height);
-  for (let i = 0; i < 4; i += 1) {
-    const text = NUMBER_STRING[randomNum(0, NUMBER_STRING.length)];
-    imgCode += text;
+  let i = 0;
+  for (const text of imgCode) {
     const fontSize = randomNum(18, 41);
     const deg = randomNum(-30, 30);
-    ctx.font = `${fontSize}px Simhei`;
+    ctx.font = `${fontSize}px Simile`;
     ctx.textBaseline = "top";
     ctx.fillStyle = randomColor(80, 150);
     ctx.save();
-    ctx.translate(30 * i + 15, 15);
+    ctx.translate(30 * i++ + 15, 15);
     ctx.rotate((deg * Math.PI) / 180);
     ctx.fillText(text, -15 + 5, -15);
     ctx.restore();
@@ -81,5 +86,4 @@ function draw(dom: HTMLCanvasElement, width: number, height: number) {
     ctx.fillStyle = randomColor(150, 200);
     ctx.fill();
   }
-  return imgCode;
 }

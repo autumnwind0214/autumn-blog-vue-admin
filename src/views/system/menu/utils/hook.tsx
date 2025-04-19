@@ -1,13 +1,13 @@
 import editForm from "../form.vue";
 import { handleTree } from "@/utils/tree";
 import { message } from "@/utils/message";
-import { getMenuList } from "@/api/modules/system/system";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
 import { reactive, ref, onMounted, h } from "vue";
 import type { FormItemProps } from "../utils/types";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { cloneDeep, isAllEmpty, deviceDetection } from "@pureadmin/utils";
+import { addMenu, deleteMenu, editMenu, getMenuList } from "@/api/modules/system/menu";
 
 export function useMenu() {
   const form = reactive({
@@ -131,11 +131,12 @@ export function useMenu() {
     return newTreeList;
   }
 
-  function openDialog(title = "新增", row?: FormItemProps) {
+  async function openDialog(title = "新增", row?: FormItemProps) {
     addDialog({
       title: `${title}菜单`,
       props: {
         formInline: {
+          id: row?.id ?? null,
           menuType: row?.menuType ?? 0,
           higherMenuOptions: formatHigherMenuOptions(cloneDeep(dataList.value)),
           parentId: row?.parentId ?? 0,
@@ -179,15 +180,17 @@ export function useMenu() {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+
+        FormRef.validate(async valid => {
           if (valid) {
-            console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
+              await addMenu(curData);
               chores();
             } else {
               // 实际开发先调用修改接口，再进行下面操作
+              await editMenu(curData);
               chores();
             }
           }
@@ -196,7 +199,9 @@ export function useMenu() {
     });
   }
 
-  function handleDelete(row) {
+  async function handleDelete(row) {
+    const result = await deleteMenu(row.id);
+    if (!result) return;
     message(`您删除了菜单名称为${transformI18n(row.title)}的这条数据`, {
       type: "success"
     });

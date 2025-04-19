@@ -32,7 +32,9 @@ const loginRules = reactive<FormRules>({
       validator: (rule, value, callback) => {
         if (value === "") {
           callback(new Error(transformI18n($t("login.pureVerifyCodeReg"))));
-        } else if (useUserStoreHook().verifyCode !== value) {
+        } else if (
+          useUserStoreHook().verifyCode.toLowerCase !== value.toLowerCase
+        ) {
           callback(
             new Error(transformI18n($t("login.pureVerifyCodeCorrectReg")))
           );

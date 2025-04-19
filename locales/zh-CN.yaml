@@ -29,6 +29,9 @@ buttons:
   pureMenuAdd: 新增菜单
   pureMenuEdit: 编辑菜单
   pureMenuDelete: 删除菜单
+  pureEssayAdd: 新增文章
+  pureEssayEdit: 编辑文章
+  pureEssayDelete: 删除文章
 search:
   pureTotal: 共
   pureHistory: 搜索历史
@@ -76,6 +79,8 @@ menus:
   pureLogin: 登录
   pureEmpty: 无Layout页
   pureTable: 表格
+  pureContentManagement: 内容管理
+  pureEssay: 文章管理
   pureSysManagement: 系统管理
   pureUser: 用户管理
   pureRole: 角色管理
