@@ -1,5 +1,4 @@
 import { http } from "@/utils/http";
-import { type MenuVo } from "@/api/types/system/routes";
 const prefix = "/system-api";
 
 type Result = {

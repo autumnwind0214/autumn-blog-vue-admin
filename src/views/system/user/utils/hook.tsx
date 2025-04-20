@@ -20,7 +20,6 @@ import {
 import {
   getRoleIds,
   getDeptList,
-  getUserList,
   getAllRoleList
 } from "@/api/modules/system/system";
 import {
@@ -40,6 +39,7 @@ import {
   reactive,
   onMounted
 } from "vue";
+import { addUser, getUserList } from "@/api/modules/system/user";
 
 export function useUser(tableRef: Ref, treeRef: Ref) {
   const form = reactive({
@@ -118,15 +118,16 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       )
     },
     {
-      label: "部门",
-      prop: "dept.name",
-      minWidth: 90
-    },
-    {
       label: "手机号码",
       prop: "phone",
       minWidth: 90,
       formatter: ({ phone }) => hideTextAtIndex(phone, { start: 3, end: 6 })
+    },
+    {
+      label: "邮箱",
+      prop: "email",
+      minWidth: 90,
+      formatter: ({ email }) => hideTextAtIndex(email, { start: 3, end: 6 })
     },
     {
       label: "状态",
@@ -148,11 +149,16 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       )
     },
     {
-      label: "创建时间",
+      label: "上次登录时间",
       minWidth: 90,
-      prop: "createTime",
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      prop: "lastLoginTime",
+      formatter: ({ lastLoginTime }) => {
+        if (isAllEmpty(lastLoginTime)) {
+          return "--";
+        } else {
+          return dayjs(lastLoginTime).format("YYYY-MM-DD HH:mm:ss");
+        }
+      }
     },
     {
       label: "操作",
@@ -259,7 +265,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   }
 
   /** 批量删除 */
-  function onbatchDel() {
+  function onBatchDel() {
     // 返回当前选中的行
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
     // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
@@ -272,11 +278,11 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getUserList(toRaw(form));
-    dataList.value = data.list;
+    const data = await getUserList(toRaw(form));
+    dataList.value = data.records;
     pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    pagination.pageSize = data.size;
+    pagination.currentPage = data.current;
 
     setTimeout(() => {
       loading.value = false;
@@ -286,27 +292,8 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const resetForm = formEl => {
     if (!formEl) return;
     formEl.resetFields();
-    form.deptId = "";
-    treeRef.value.onTreeReset();
     onSearch();
   };
-
-  function onTreeSelect({ id, selected }) {
-    form.deptId = selected ? id : "";
-    onSearch();
-  }
-
-  function formatHigherDeptOptions(treeList) {
-    // 根据返回数据的status字段值判断追加是否禁用disabled字段，返回处理后的树结构，用于上级部门级联选择器的展示（实际开发中也是如此，不可能前端需要的每个字段后端都会返回，这时需要前端自行根据后端返回的某些字段做逻辑处理）
-    if (!treeList || !treeList.length) return;
-    const newTreeList = [];
-    for (let i = 0; i < treeList.length; i++) {
-      treeList[i].disabled = treeList[i].status === 0 ? true : false;
-      formatHigherDeptOptions(treeList[i].children);
-      newTreeList.push(treeList[i]);
-    }
-    return newTreeList;
-  }
 
   function openDialog(title = "新增", row?: FormItemProps) {
     addDialog({
@@ -314,8 +301,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       props: {
         formInline: {
           title,
-          higherDeptOptions: formatHigherDeptOptions(higherDeptOptions.value),
-          parentId: row?.dept.id ?? 0,
+          birthday: row?.birthday ?? "",
           nickname: row?.nickname ?? "",
           username: row?.username ?? "",
           password: row?.password ?? "",
@@ -323,7 +309,6 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           email: row?.email ?? "",
           sex: row?.sex ?? "",
           status: row?.status ?? 1,
-          remark: row?.remark ?? ""
         }
       },
       width: "46%",
@@ -342,12 +327,13 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
+              await addUser(curData);
               chores();
             } else {
               // 实际开发先调用修改接口，再进行下面操作
@@ -496,14 +482,8 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     treeLoading.value = true;
     onSearch();
 
-    // 归属部门
-    const { data } = await getDeptList();
-    higherDeptOptions.value = handleTree(data);
-    treeData.value = handleTree(data);
-    treeLoading.value = false;
-
-    // 角色列表
-    roleOptions.value = (await getAllRoleList()).data;
+    // todo 角色列表
+    // roleOptions.value = (await getAllRoleList()).data;
   });
 
   return {
@@ -519,9 +499,8 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     deviceDetection,
     onSearch,
     resetForm,
-    onbatchDel,
+    onBatchDel,
     openDialog,
-    onTreeSelect,
     handleUpdate,
     handleDelete,
     handleUpload,

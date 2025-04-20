@@ -42,6 +42,9 @@ export const checkStatus = (status: number, msg?: string) => {
     case 408:
       message(msg || "请求超时！请您稍后重试", { type: "error" });
       break;
+    case 409:
+      message(msg || "请求冲突！", { type: "error" });
+      break;
     case 422:
       message(msg || "请求参数异常！", { type: "error" });
       break;

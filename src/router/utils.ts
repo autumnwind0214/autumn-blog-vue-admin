@@ -35,10 +35,10 @@ import { userKey } from "@/utils/auth";
 function handSort(routeInfo: any) {
   const { name, path, parentId, meta } = routeInfo;
   return isAllEmpty(parentId)
-    ? isAllEmpty(meta?.sort) ||
-    (meta?.sort === 0 && name !== "Home" && path !== "/")
-      ? true
-      : false
+    ? !!(
+        isAllEmpty(meta?.sort) ||
+        (meta?.sort === 0 && name !== "Home" && path !== "/")
+      )
     : false;
 }
 
@@ -93,7 +93,6 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   const newTree = cloneDeep(data).filter((v: any) => {
     return isOneOfArray(v.meta?.roles, currentRoles);
   });
-  // console.log(newTree);
   newTree.forEach((v: any) => {
     v.children && (v.children = filterNoPermissionTree(v.children));
   });

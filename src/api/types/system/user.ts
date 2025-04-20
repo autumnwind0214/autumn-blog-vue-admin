@@ -40,15 +40,14 @@ export type UserInfo = {
 };
 
 export type ResultTable = {
-  success: boolean;
-  data?: {
-    /** 列表数据 */
-    list: Array<any>;
-    /** 总条目数 */
-    total?: number;
-    /** 每页显示条目个数 */
-    pageSize?: number;
-    /** 当前页数 */
-    currentPage?: number;
-  };
+  /** 列表数据 */
+  records: Array<any>;
+  /** 总条目数 */
+  total?: number;
+  /** 是否存在下一页 */
+  pages?: number;
+  /** 当前页 */
+  current?: number;
+  /** 每页显示条数 */
+  size?: number;
 };

@@ -29,10 +29,6 @@ export const usePermissionStore = defineStore("pure-permission", {
       this.wholeMenus = filterNoPermissionTree(
         filterTree(ascending(this.constantMenus.concat(routes)))
       );
-      // this.wholeMenus = filterTree(
-      //   ascending(this.constantMenus.concat(routes))
-      // );
-      console.log(this.wholeMenus);
       this.flatteningRoutes = formatFlatteningRoutes(
         this.constantMenus.concat(routes) as any
       );

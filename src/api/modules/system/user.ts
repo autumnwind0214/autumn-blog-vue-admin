@@ -16,3 +16,13 @@ export const getMine = (data?: object) => {
 export const getMineLogs = (data?: object) => {
   return http.request<ResultTable>("get", "/mine-logs", { data });
 };
+
+/** 用户管理-列表 */
+export const getUserList = (data?: object) => {
+  return http.request<ResultTable>("post", `${prefix}/user/list`, { data });
+};
+
+/** 用户管理-新增 */
+export const addUser = (data?: object) => {
+  return http.request<ResultTable>("post", `${prefix}/user`, { data });
+};

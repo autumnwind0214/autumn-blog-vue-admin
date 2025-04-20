@@ -8,16 +8,14 @@ import { usePublicHooks } from "../../hooks";
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     title: "新增",
-    higherDeptOptions: [],
-    parentId: 0,
+    birthday: "",
     nickname: "",
     username: "",
     password: "",
     phone: "",
     email: "",
     sex: "",
-    status: 1,
-    remark: ""
+    status: 1
   })
 });
 
@@ -121,26 +119,14 @@ defineExpose({ getRef });
       </re-col>
 
       <re-col :value="12" :xs="24" :sm="24">
-        <el-form-item label="归属部门">
-          <el-cascader
-            v-model="newFormInline.parentId"
+        <el-form-item label="生日">
+          <el-date-picker
+            v-model="newFormInline.birthday"
+            type="date"
+            placeholder="请选择生日"
             class="w-full"
-            :options="newFormInline.higherDeptOptions"
-            :props="{
-              value: 'id',
-              label: 'name',
-              emitPath: false,
-              checkStrictly: true
-            }"
-            clearable
-            filterable
-            placeholder="请选择归属部门"
-          >
-            <template #default="{ node, data }">
-              <span>{{ data.name }}</span>
-              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-            </template>
-          </el-cascader>
+            size="default"
+          />
         </el-form-item>
       </re-col>
       <re-col
@@ -158,16 +144,6 @@ defineExpose({ getRef });
             active-text="启用"
             inactive-text="停用"
             :style="switchStyle"
-          />
-        </el-form-item>
-      </re-col>
-
-      <re-col>
-        <el-form-item label="备注">
-          <el-input
-            v-model="newFormInline.remark"
-            placeholder="请输入备注信息"
-            type="textarea"
           />
         </el-form-item>
       </re-col>
