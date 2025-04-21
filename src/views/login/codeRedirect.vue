@@ -43,16 +43,16 @@ if (code) {
         useUserStoreHook()
           .handGetUserInfo()
           .then(() => {
-            // 获取后端路由
-            return initRouter()
-              .then(() => {
-                router.push(getTopMenu(true).path).then(() => {
-                  message(t("login.pureLoginSuccess"), { type: "success" });
-                });
-              })
-              .catch((e: any) => {
-                console.log("err", e);
-              });
+            // todo 获取后端路由
+            // return initRouter()
+            //   .then(() => {
+            //     router.push(getTopMenu(true).path).then(() => {
+            //       message(t("login.pureLoginSuccess"), { type: "success" });
+            //     });
+            //   })
+            //   .catch((e: any) => {
+            //     console.log("getAsyncRoutes fail: ", e);
+            //   });
           });
       });
   }

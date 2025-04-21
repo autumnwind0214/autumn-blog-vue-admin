@@ -4,6 +4,7 @@ import { storageLocal, isString, isIncludeAllChildren } from "@pureadmin/utils";
 import CryptoJS from "crypto-js";
 import type { AccessToken } from "@/api/login";
 import type { UserInfo } from "@/api/types/system/user";
+import { jwtDecode } from 'jwt-decode';
 
 export const userKey = "user-info";
 export const TokenKey = "authorized-token";
@@ -52,57 +53,14 @@ export function setToken(data: AccessToken) {
         }
       : {}
   );
-
-  // function setUserKey({ avatar, username, nickname, roles, permissions }) {
-  //   useUserStoreHook().SET_AVATAR(avatar);
-  //   useUserStoreHook().SET_USERNAME(username);
-  //   useUserStoreHook().SET_NICKNAME(nickname);
-  //   useUserStoreHook().SET_ROLES(roles);
-  //   useUserStoreHook().SET_PERMS(permissions);
-  //   storageLocal().setItem(userKey, {
-  //     refreshToken,
-  //     expires,
-  //     avatar,
-  //     username,
-  //     nickname,
-  //     roles,
-  //     permissions
-  //   });
-  // }
-
-  // if (data.username && data.roles) {
-  //   const { username, roles } = data;
-  //   setUserKey({
-  //     avatar: data?.avatar ?? "",
-  //     username,
-  //     nickname: data?.nickname ?? "",
-  //     roles,
-  //     permissions: data?.permissions ?? []
-  //   });
-  // } else {
-  //   const avatar =
-  //     storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "";
-  //   const username =
-  //     storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? "";
-  //   const nickname =
-  //     storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? "";
-  //   const roles =
-  //     storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [];
-  //   const permissions =
-  //     storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? [];
-  //   setUserKey({
-  //     avatar,
-  //     username,
-  //     nickname,
-  //     roles,
-  //     permissions
-  //   });
-  // }
+  // 解析access_token 获取用户和权限信息
+  const parse = JSON.parse(jwtDecode(data.accessToken));
+  const userInfo = {
+  }
 }
 
 /** todo 保存用户信息 */
 export function setUserInfo(data: UserInfo) {
-  data.roles = ["admin"];
   storageLocal().setItem(userKey, JSON.stringify(data));
 }
 
