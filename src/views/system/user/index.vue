@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import tree from "./tree.vue";
 import { useUser } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";

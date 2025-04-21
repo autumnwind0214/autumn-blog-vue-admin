@@ -26,3 +26,17 @@ export const getUserList = (data?: object) => {
 export const addUser = (data?: object) => {
   return http.request<ResultTable>("post", `${prefix}/user`, { data });
 };
+
+/** 用户管理-编辑 */
+export const editUser = (data?: object) => {
+  return http.request<ResultTable>("put", `${prefix}/user`, { data });
+};
+
+/** 用户管理-修改状态 */
+export const editUserStatus = (id: number, status: number) => {
+  return http.request<ResultTable>(
+    "put",
+    `${prefix}/user/status/${id}/${status}`,
+    {}
+  );
+};

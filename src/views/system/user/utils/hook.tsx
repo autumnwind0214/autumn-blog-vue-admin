@@ -39,7 +39,7 @@ import {
   reactive,
   onMounted
 } from "vue";
-import { addUser, getUserList } from "@/api/modules/system/user";
+import { addUser, editUser, editUserStatus, getUserList } from "@/api/modules/system/user";
 
 export function useUser(tableRef: Ref, treeRef: Ref) {
   const form = reactive({
@@ -144,6 +144,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           inactive-text="已停用"
           inline-prompt
           style={switchStyle.value}
+          disabled={scope.row.id === 1}
           onChange={() => onChange(scope as any)}
         />
       )
@@ -192,6 +193,15 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const roleOptions = ref([]);
 
   function onChange({ row, index }) {
+    // 新增 ID 校验逻辑
+    if (row.id === 1) {
+      message("系统管理员不可停用", {
+        type: "warning"
+      });
+      // 直接终止后续流程
+      row.status === 1;
+      return;
+    }
     ElMessageBox.confirm(
       `确认要<strong>${
         row.status === 0 ? "停用" : "启用"
@@ -207,7 +217,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         draggable: true
       }
     )
-      .then(() => {
+      .then(async () => {
         switchLoadMap.value[index] = Object.assign(
           {},
           switchLoadMap.value[index],
@@ -215,18 +225,24 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             loading: true
           }
         );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message("已成功修改用户状态", {
-            type: "success"
+        await editUserStatus(row?.id ?? null, row?.status ?? 0)
+          .then(() => {
+            setTimeout(() => {
+              switchLoadMap.value[index] = Object.assign(
+                {},
+                switchLoadMap.value[index],
+                {
+                  loading: false
+                }
+              );
+              message("已成功修改用户状态", {
+                type: "success"
+              });
+            }, 300);
+          })
+          .catch(() => {
+            row.status === 0 ? (row.status = 1) : (row.status = 0);
           });
-        }, 300);
       })
       .catch(() => {
         row.status === 0 ? (row.status = 1) : (row.status = 0);
@@ -301,6 +317,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       props: {
         formInline: {
           title,
+          id: row?.id ?? null,
           birthday: row?.birthday ?? "",
           nickname: row?.nickname ?? "",
           username: row?.username ?? "",
@@ -308,7 +325,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           phone: row?.phone ?? "",
           email: row?.email ?? "",
           sex: row?.sex ?? "",
-          status: row?.status ?? 1,
+          status: row?.status ?? 1
         }
       },
       width: "46%",
@@ -337,6 +354,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
               chores();
             } else {
               // 实际开发先调用修改接口，再进行下面操作
+              await editUser(curData);
               chores();
             }
           }

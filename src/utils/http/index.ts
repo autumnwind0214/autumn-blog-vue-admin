@@ -147,11 +147,7 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
-        console.log("error: ", error.response);
-        const { response } = $error;
-        if (response.data.code != SUCCESS) {
-          message(response.message, { type: "error" });
-        }
+        checkStatus(error.response.data.code, error.response.data.message);
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();
