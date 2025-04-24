@@ -25,7 +25,7 @@ import {
   type RouteComponent
 } from "vue-router";
 import { userKey, removeToken, multipleTabsKey } from "@/utils/auth";
-import type { UserInfo } from "@/api/types/system/user";
+import type { LoginUser } from "@/api/types/system/user";
 
 /** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
  * 如何匹配所有文件请看：https://github.com/mrmlnc/fast-glob#basic-syntax
@@ -98,7 +98,7 @@ export function resetRouter() {
 }
 
 /** 路由白名单 */
-const whiteList = ["/login", "/codeRedirect"];
+const whiteList = ["/codeRedirect"];
 
 const { VITE_HIDE_HOME } = import.meta.env;
 
@@ -110,7 +110,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       handleAliveRoute(to);
     }
   }
-  const userinfo = storageLocal().getItem<UserInfo>(userKey);
+  const userinfo = storageLocal().getItem<LoginUser>(userKey);
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
@@ -128,6 +128,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
   }
   if (Cookies.get(multipleTabsKey) && userinfo) {
     // todo 无权限跳转403页面
+    console.log("roles: ", to);
     // if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userinfo?.roles)) {
     //   next({ path: "/error/403" });
     // }
@@ -147,6 +148,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       // 刷新
       if (
         usePermissionStoreHook().wholeMenus.length === 0 &&
+        to.path !== "/codeRedirect" &&
         to.path !== "/login"
       ) {
         initRouter().then((router: Router) => {
@@ -192,7 +194,12 @@ router.beforeEach((to: ToRouteType, _from, next) => {
         next({ path: "/codeRedirect" });
       }
     } else {
-      next();
+      if (to.fullPath === "/login") {
+        removeToken();
+        next({ path: "/codeRedirect" });
+      } else {
+        next();
+      }
     }
   }
 });

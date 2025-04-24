@@ -61,7 +61,6 @@ if (code) {
 }
 
 function gotoLogin() {
-  console.log("codeRedirect");
   // 缓存state
   localStorage.setItem("state", state);
   window.location.href = `${import.meta.env.VITE_OAUTH_ISSUER}/oauth2/authorize?client_id=${

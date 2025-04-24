@@ -3,11 +3,13 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { storageLocal, isString, isIncludeAllChildren } from "@pureadmin/utils";
 import CryptoJS from "crypto-js";
 import type { AccessToken } from "@/api/login";
-import type { UserInfo } from "@/api/types/system/user";
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
+import type { LoginUser } from "@/api/types/system/user";
+import type { DecodeToken } from "@/api/login";
 
 export const userKey = "user-info";
 export const TokenKey = "authorized-token";
+export const StateKey = "state";
 /**
  * 通过`multiple-tabs`是否在`cookie`中，判断用户是否已经登录系统，
  * 从而支持多标签页打开已经登录的系统后无需再登录。
@@ -54,13 +56,19 @@ export function setToken(data: AccessToken) {
       : {}
   );
   // 解析access_token 获取用户和权限信息
-  const parse = JSON.parse(jwtDecode(data.accessToken));
-  const userInfo = {
-  }
+  const decodeToken = jwtDecode<DecodeToken>(data.accessToken);
+  const uniqueIdObj = JSON.parse(decodeToken.uniqueId);
+  const userInfo: LoginUser = {
+    id: uniqueIdObj.id,
+    avatar: uniqueIdObj.avatar,
+    nickname: uniqueIdObj.nickname,
+    permissions: decodeToken.payload.authorities
+  };
+  setUserInfo(userInfo);
 }
 
-/** todo 保存用户信息 */
-export function setUserInfo(data: UserInfo) {
+/** 保存用户信息 */
+export function setUserInfo(data: LoginUser) {
   storageLocal().setItem(userKey, JSON.stringify(data));
 }
 
@@ -69,6 +77,7 @@ export function removeToken() {
   Cookies.remove(TokenKey);
   Cookies.remove(multipleTabsKey);
   storageLocal().removeItem(userKey);
+  storageLocal().removeItem(StateKey);
   const cookies = document.cookie.split(";");
   cookies.forEach(cookie => {
     const eqPos = cookie.indexOf("=");

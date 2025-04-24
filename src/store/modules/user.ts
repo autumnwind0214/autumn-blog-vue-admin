@@ -98,7 +98,7 @@ export const useUserStore = defineStore("pure-user", {
       removeToken();
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
-      router.push("/login");
+      router.push("/codeRedirect");
     },
     /** 获取token */
     async handAccessToken(data) {

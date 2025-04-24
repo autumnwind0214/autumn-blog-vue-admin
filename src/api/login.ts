@@ -15,6 +15,14 @@ export type AccessToken = {
   };
 };
 
+export type DecodeToken = {
+  payload: {
+    authorities: Array<string>;
+  };
+  scope: Array<string>;
+  uniqueId: string;
+};
+
 export type RefreshTokenResult = {
   /** `token` */
   accessToken: string;

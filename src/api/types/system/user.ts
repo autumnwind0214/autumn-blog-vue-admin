@@ -20,6 +20,13 @@ export type UserResult = {
   };
 };
 
+export type LoginUser = {
+  id: number;
+  avatar: string;
+  nickname: string;
+  permissions: Array<string>;
+};
+
 export type UserInfo = {
   /** 头像 */
   avatar: string;
