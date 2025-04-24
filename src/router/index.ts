@@ -128,7 +128,6 @@ router.beforeEach((to: ToRouteType, _from, next) => {
   }
   if (Cookies.get(multipleTabsKey) && userinfo) {
     // todo 无权限跳转403页面
-    console.log("roles: ", to);
     // if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userinfo?.roles)) {
     //   next({ path: "/error/403" });
     // }

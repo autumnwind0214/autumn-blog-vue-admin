@@ -39,20 +39,14 @@ if (code) {
     useUserStoreHook()
       .handAccessToken(data)
       .then((res: any) => {
-        // 获取用户信息
-        useUserStoreHook()
-          .handGetUserInfo()
+        return initRouter()
           .then(() => {
-            // todo 获取后端路由
-            // return initRouter()
-            //   .then(() => {
-            //     router.push(getTopMenu(true).path).then(() => {
-            //       message(t("login.pureLoginSuccess"), { type: "success" });
-            //     });
-            //   })
-            //   .catch((e: any) => {
-            //     console.log("getAsyncRoutes fail: ", e);
-            //   });
+            router.push(getTopMenu(true).path).then(() => {
+              message(t("login.pureLoginSuccess"), { type: "success" });
+            });
+          })
+          .catch((e: any) => {
+            console.log("getAsyncRoutes fail: ", e);
           });
       });
   }

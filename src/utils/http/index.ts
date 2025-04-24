@@ -131,8 +131,10 @@ class PureHttp {
         NProgress.done();
         console.log("response.data: ", response.data);
         if (response.data.code !== SUCCESS) {
+          console.log("response.data: ", response.data);
           checkStatus(response.data.code, response.data.message);
-          throw new Error("请求失败，请稍后重试");
+          // throw new Error("请求失败，请稍后重试");
+          // return;
         }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {
@@ -147,7 +149,8 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
-        checkStatus(error.response.data.code, error.response.data.message);
+        console.log("error: ", error);
+        // checkStatus(error.response.data.code, error.response.data.message);
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();
