@@ -57,7 +57,6 @@ export function setToken(data: AccessToken) {
   );
   // 解析access_token 获取用户和权限信息
   const decodeToken = jwtDecode<DecodeToken>(data.accessToken);
-  console.log("decodeToken", decodeToken);
   const uniqueIdObj = JSON.parse(decodeToken.uniqueId);
   const userInfo: LoginUser = {
     id: uniqueIdObj.id,

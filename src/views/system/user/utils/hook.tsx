@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import roleForm from "../form/role.vue";
 import editForm from "../form/index.vue";
 import { zxcvbn } from "@zxcvbn-ts/core";
-import { handleTree } from "@/utils/tree";
 import { message } from "@/utils/message";
 import userAvatar from "@/assets/user.jpg";
 import { usePublicHooks } from "../../hooks";
@@ -17,11 +16,7 @@ import {
   hideTextAtIndex,
   deviceDetection
 } from "@pureadmin/utils";
-import {
-  getRoleIds,
-  getDeptList,
-  getAllRoleList
-} from "@/api/modules/system/system";
+import { getRoleIds } from "@/api/modules/system/system";
 import {
   ElForm,
   ElInput,
@@ -39,9 +34,15 @@ import {
   reactive,
   onMounted
 } from "vue";
-import { addUser, editUser, editUserStatus, getUserList } from "@/api/modules/system/user";
+import {
+  addUser,
+  deleteUser,
+  editUser,
+  editUserStatus,
+  getUserList
+} from "@/api/modules/system/user";
 
-export function useUser(tableRef: Ref, treeRef: Ref) {
+export function useUser(tableRef: Ref) {
   const form = reactive({
     // 左侧部门树的id
     deptId: "",
@@ -57,7 +58,6 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const avatarInfo = ref();
   const switchLoadMap = ref({});
   const { switchStyle } = usePublicHooks();
-  const higherDeptOptions = ref();
   const treeData = ref([]);
   const treeLoading = ref(true);
   const selectedNum = ref(0);
@@ -72,7 +72,10 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       label: "勾选列", // 如果需要表格多选，此处label必须设置
       type: "selection",
       fixed: "left",
-      reserveSelection: true // 数据刷新后保留选项
+      reserveSelection: true, // 数据刷新后保留选项
+      selectable: selectable => {
+        return ![1].includes(selectable.id);
+      }
     },
     {
       label: "用户编号",
@@ -228,13 +231,6 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         await editUserStatus(row?.id ?? null, row?.status ?? 0)
           .then(() => {
             setTimeout(() => {
-              switchLoadMap.value[index] = Object.assign(
-                {},
-                switchLoadMap.value[index],
-                {
-                  loading: false
-                }
-              );
               message("已成功修改用户状态", {
                 type: "success"
               });
@@ -243,6 +239,13 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           .catch(() => {
             row.status === 0 ? (row.status = 1) : (row.status = 0);
           });
+        switchLoadMap.value[index] = Object.assign(
+          {},
+          switchLoadMap.value[index],
+          {
+            loading: false
+          }
+        );
       })
       .catch(() => {
         row.status === 0 ? (row.status = 1) : (row.status = 0);
@@ -253,8 +256,10 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     console.log(row);
   }
 
-  function handleDelete(row) {
-    message(`您删除了用户编号为${row.id}的这条数据`, { type: "success" });
+  async function handleDelete(row) {
+    await deleteUser(row.id).then(() => {
+      message(`您删除了用户编号为${row.id}的这条数据`, { type: "success" });
+    });
     onSearch();
   }
 
@@ -281,12 +286,15 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   }
 
   /** 批量删除 */
-  function onBatchDel() {
+  async function onBatchDel() {
     // 返回当前选中的行
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
-    // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
-    message(`已删除用户编号为 ${getKeyList(curSelected, "id")} 的数据`, {
-      type: "success"
+    console.log("ids: ", getKeyList(curSelected, "id"));
+    await deleteUser(getKeyList(curSelected, "id")).then(() => {
+      // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
+      message(`已删除用户编号为 ${getKeyList(curSelected, "id")} 的数据`, {
+        type: "success"
+      });
     });
     tableRef.value.getTableRef().clearSelection();
     onSearch();
@@ -322,6 +330,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           nickname: row?.nickname ?? "",
           username: row?.username ?? "",
           password: row?.password ?? "",
+          newPassword: "",
           phone: row?.phone ?? "",
           email: row?.email ?? "",
           sex: row?.sex ?? "",
@@ -364,6 +373,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   }
 
   const cropRef = ref();
+
   /** 上传头像 */
   function handleUpload(row) {
     addDialog({

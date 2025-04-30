@@ -22,6 +22,7 @@ buttons:
   pureUserAdd: 新增用户
   pureUserEdit: 编辑用户
   pureUserDelete: 删除用户
+  pureUserStatus: 修改状态
   pureRoleAdd: 新增角色
   pureRoleEdit: 编辑角色
   pureRoleDelete: 删除角色

@@ -14,7 +14,6 @@ import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { checkStatus, SUCCESS } from "@/utils/http/result";
-import { message } from "@/utils/message";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -131,10 +130,9 @@ class PureHttp {
         NProgress.done();
         console.log("response.data: ", response.data);
         if (response.data.code !== SUCCESS) {
-          console.log("response.data: ", response.data);
           checkStatus(response.data.code, response.data.message);
-          // throw new Error("请求失败，请稍后重试");
-          // return;
+          throw new Error("请求失败，请稍后重试");
+          // return response.data.data;
         }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {
@@ -149,8 +147,6 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
-        console.log("error: ", error);
-        // checkStatus(error.response.data.code, error.response.data.message);
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();

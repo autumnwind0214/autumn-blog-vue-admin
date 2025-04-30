@@ -1,5 +1,6 @@
 import { http } from "@/utils/http";
-import type { ResultTable, UserInfo } from "@/api/types/system/user";
+import type { UserInfo } from "@/api/types/system/user";
+import type { ResultTable } from "@/api/result";
 
 const prefix = "/system-api";
 
@@ -8,14 +9,14 @@ export const getUserInfo = () => {
 };
 
 /** 账户设置-个人信息 */
-export const getMine = (data?: object) => {
-  return http.request<UserInfo>("get", "/mine", { data });
-};
-
-/** 账户设置-个人安全日志 */
-export const getMineLogs = (data?: object) => {
-  return http.request<ResultTable>("get", "/mine-logs", { data });
-};
+// export const getMine = (data?: object) => {
+//   return http.request<UserInfo>("get", "/mine", { data });
+// };
+//
+// /** 账户设置-个人安全日志 */
+// export const getMineLogs = (data?: object) => {
+//   return http.request<ResultTable>("get", "/mine-logs", { data });
+// };
 
 /** 用户管理-列表 */
 export const getUserList = (data?: object) => {
@@ -24,19 +25,24 @@ export const getUserList = (data?: object) => {
 
 /** 用户管理-新增 */
 export const addUser = (data?: object) => {
-  return http.request<ResultTable>("post", `${prefix}/user`, { data });
+  return http.request<boolean>("post", `${prefix}/user`, { data });
 };
 
 /** 用户管理-编辑 */
 export const editUser = (data?: object) => {
-  return http.request<ResultTable>("put", `${prefix}/user`, { data });
+  return http.request<boolean>("put", `${prefix}/user`, { data });
 };
 
 /** 用户管理-修改状态 */
 export const editUserStatus = (id: number, status: number) => {
-  return http.request<ResultTable>(
+  return http.request<boolean>(
     "put",
     `${prefix}/user/status/${id}/${status}`,
     {}
   );
+};
+
+/** 用户管理-删除 */
+export const deleteUser = (ids: Array<number>) => {
+  return http.request<boolean>("delete", `${prefix}/user/${ids}`, {});
 };

@@ -164,6 +164,7 @@ const {
                 修改
               </el-button>
               <el-popconfirm
+                v-if="row.id !== 1"
                 :title="`是否确认删除用户编号为${row.id}的这条数据`"
                 @confirm="handleDelete(row)"
               >
@@ -204,6 +205,7 @@ const {
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-button
+                        v-if="row.id !== 1"
                         :class="buttonClass"
                         link
                         type="primary"
