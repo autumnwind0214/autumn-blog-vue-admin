@@ -91,7 +91,20 @@ defineExpose({ getRef });
         :xs="24"
         :sm="24"
       >
-        <el-form-item label="确认密码" prop="newPassword">
+        <el-form-item
+          label="确认密码"
+          prop="newPassword"
+          :rules="{
+            validator: (rule, value, callback) => {
+              if (value !== newFormInline.password) {
+                callback(new Error('两次输入的密码不一致'));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur'
+          }"
+        >
           <el-input
             v-model="newFormInline.newPassword"
             clearable
