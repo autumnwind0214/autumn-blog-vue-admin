@@ -38,7 +38,7 @@ export type Captcha = {
 
 /** 登录 */
 export const getLogin = (data?: object) => {
-  return http.post(`${ prefix }/login`, {
+  return http.post(`${prefix}/login`, {
     data,
     headers: {
       "Content-Type": "multipart/form-data"
@@ -48,29 +48,35 @@ export const getLogin = (data?: object) => {
 
 /** 刷新token */
 export const refreshTokenApi = (data?: object) => {
-  return http.request<AccessToken>("post", `${ prefix }/refresh-token`, {
+  return http.request<AccessToken>("post", `${prefix}/refresh-token`, {
     data
   });
 };
 
 // 获取图形验证码
 export const getCaptcha = () => {
-  return http.request<Captcha>("get", `${ prefix }/getCaptcha`, {});
+  return http.request<Captcha>("get", `${prefix}/getCaptcha`, {});
 };
 
+// 获取访问令牌
 export const getAccessToken = (data: any) => {
   const headers: any = {
     "Content-Type": "application/x-www-form-urlencoded"
   };
   if (data.client_secret) {
     // 设置客户端的basic认证
-    headers.Authorization = `Basic ${ base64Str(`${ data.client_id }:${ data.client_secret }`) }`;
+    headers.Authorization = `Basic ${base64Str(`${data.client_id}:${data.client_secret}`)}`;
     // 移除入参中的key
     delete data.client_id;
     delete data.client_secret;
   }
-  return http.request<AccessToken>("post", `${ prefix }/oauth2/token`, {
+  return http.request<AccessToken>("post", `${prefix}/oauth2/token`, {
     data,
     headers
   });
+};
+
+// 退出登录
+export const logoutApi = () => {
+  return http.request("post", `${prefix}/logout`, {});
 };

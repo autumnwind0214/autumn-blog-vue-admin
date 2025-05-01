@@ -16,6 +16,7 @@ import { useEpThemeStoreHook } from "@/store/modules/epTheme";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import ExitFullscreen from "~icons/ri/fullscreen-exit-fill";
 import Fullscreen from "~icons/ri/fullscreen-fill";
+import { logoutApi } from "@/api/login";
 
 const errorInfo =
   "The current routing configuration is incorrect, please check the configuration";
@@ -97,8 +98,9 @@ export function useNav() {
   }
 
   /** 退出登录 */
-  function logout() {
+  async function logout() {
     useUserStoreHook().logOut();
+    await logoutApi();
   }
 
   function backTopMenu() {
