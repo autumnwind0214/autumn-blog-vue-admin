@@ -46,3 +46,10 @@ export const editUserStatus = (id: number, status: number) => {
 export const deleteUser = (ids: Array<number>) => {
   return http.request<boolean>("delete", `${prefix}/user/${ids}`, {});
 };
+
+/** 用户管理-重置密码 */
+export const changePassword = (data?: object) => {
+  return http.request<boolean>("put", `${prefix}/user/changePassword`, {
+    data
+  });
+};

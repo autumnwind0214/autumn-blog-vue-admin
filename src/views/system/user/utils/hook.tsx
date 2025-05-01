@@ -36,6 +36,7 @@ import {
 } from "vue";
 import {
   addUser,
+  changePassword,
   deleteUser,
   editUser,
   editUserStatus,
@@ -182,7 +183,8 @@ export function useUser(tableRef: Ref) {
   });
   // 重置的新密码
   const pwdForm = reactive({
-    newPwd: ""
+    newPwd: "",
+    confirmPwd: ""
   });
   const pwdProgress = [
     { color: "#e74242", text: "非常弱" },
@@ -432,6 +434,34 @@ export function useUser(tableRef: Ref) {
                 placeholder="请输入新密码"
               />
             </ElFormItem>
+            <ElFormItem
+              prop="confirmPwd"
+              rules={[
+                {
+                  required: true,
+                  message: "请确认新密码",
+                  trigger: "blur"
+                },
+                {
+                  validator: (rule, value, callback) => {
+                    if (value !== pwdForm.newPwd) {
+                      callback(new Error("两次输入的密码不一致"));
+                    } else {
+                      callback();
+                    }
+                  },
+                  trigger: "blur"
+                }
+              ]}
+            >
+              <ElInput
+                clearable
+                show-password
+                type="password"
+                v-model={pwdForm.confirmPwd}
+                placeholder="请确认新密码"
+              />
+            </ElFormItem>
           </ElForm>
           <div class="my-4 flex">
             {pwdProgress.map(({ color, text }, idx) => (
@@ -461,11 +491,18 @@ export function useUser(tableRef: Ref) {
       ),
       closeCallBack: () => (pwdForm.newPwd = ""),
       beforeSure: done => {
-        ruleFormRef.value.validate(valid => {
+        ruleFormRef.value.validate(async valid => {
           if (valid) {
-            // 表单规则校验通过
-            message(`已成功重置 ${row.username} 用户的密码`, {
-              type: "success"
+            // todo 需要对密码进行加密传参
+            await changePassword({
+              userId: row.id,
+              password: pwdForm.newPwd,
+              confirmPwd: pwdForm.confirmPwd
+            }).then(() => {
+              // 表单规则校验通过
+              message(`已成功重置 ${row.username} 用户的密码`, {
+                type: "success"
+              });
             });
             console.log(pwdForm.newPwd);
             // 根据实际业务使用pwdForm.newPwd和row里的某些字段去调用重置用户密码接口即可
