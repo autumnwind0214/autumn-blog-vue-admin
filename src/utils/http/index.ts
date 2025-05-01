@@ -76,23 +76,31 @@ class PureHttp {
           return config;
         }
         /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
-        const whiteList = ["/refresh-token", "/login"];
+        const whiteList = ["/oauth2/token", "/login"];
         return whiteList.some(url => config.url.endsWith(url))
           ? config
           : new Promise(resolve => {
               const data = getToken();
+              console.log("token: ", data);
+              console.log("config: ", config);
               if (data) {
                 const now = new Date().getTime();
-                const expired = parseInt(data.expiresAt) - now <= 0;
+                const expired = parseInt(data.expires) - now <= 0;
+                console.log("expired: ", data.expires);
+                console.log("now: ", now);
                 if (expired) {
                   if (!PureHttp.isRefreshing) {
                     PureHttp.isRefreshing = true;
                     // token过期刷新
                     useUserStoreHook()
                       .handRefreshToken({
-                        refreshToken: data.refreshToken.tokenValue
+                        grant_type: "refresh_token",
+                        client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+                        client_secret: import.meta.env.VITE_OAUTH_CLIENT_SECRET,
+                        refresh_token: data.refreshToken.tokenValue
                       })
                       .then(res => {
+                        console.log("refreshToken: ", res);
                         const token = res.accessToken;
                         config.headers["Authorization"] = formatToken(token);
                         PureHttp.requests.forEach(cb => cb(token));

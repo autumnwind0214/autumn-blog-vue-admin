@@ -32,7 +32,7 @@ import Check from "~icons/ep/check";
 import User from "~icons/ri/user-3-fill";
 import Info from "~icons/ri/information-line";
 import Keyhole from "~icons/ri/shield-keyhole-line";
-import { getQueryString } from "@/utils/auth";
+import { getQueryParams, getQueryString } from "@/utils/auth";
 
 defineOptions({
   name: "Login"

@@ -6,12 +6,16 @@ const prefix = "/system-api";
 export type AccessToken = {
   accessToken: string;
   tokenType: string;
-  expiresAt: number;
-  issuedAt: number;
+  expiresAt: Date;
+  issuedAt: Date;
+  expires: number;
+  issued: number;
   refreshToken: {
     tokenValue: string;
-    expiresAt: number;
-    issuedAt: number;
+    expiresAt: Date;
+    issuedAt: Date;
+    expires: number;
+    issued: number;
   };
 };
 
@@ -47,9 +51,21 @@ export const getLogin = (data?: object) => {
 };
 
 /** 刷新token */
-export const refreshTokenApi = (data?: object) => {
-  return http.request<AccessToken>("post", `${prefix}/refresh-token`, {
-    data
+export const refreshTokenApi = (data?: any) => {
+  const headers: any = {
+    "Content-Type": "application/x-www-form-urlencoded"
+  };
+
+  if (data.client_id && data.client_secret) {
+    // 添加 Basic Auth 认证
+    headers.Authorization = `Basic ${base64Str(`${data.client_id}:${data.client_secret}`)}`;
+    // 移除入参中的key
+    delete data.client_id;
+    delete data.client_secret;
+  }
+  return http.request<AccessToken>("post", `${prefix}/oauth2/token`, {
+    data,
+    headers
   });
 };
 

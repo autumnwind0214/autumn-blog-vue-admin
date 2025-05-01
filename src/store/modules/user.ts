@@ -9,7 +9,7 @@ import {
 } from "../utils";
 
 import { useMultiTagsStoreHook } from "./multiTags";
-import { setToken, removeToken, userKey, setUserInfo } from "@/utils/auth";
+import { setToken, removeToken, userKey } from "@/utils/auth";
 import {
   type AccessToken,
   getAccessToken,
@@ -136,7 +136,7 @@ export const useUserStore = defineStore("pure-user", {
         getUserInfo()
           .then(data => {
             if (data) {
-              setUserInfo(data);
+              // setUserInfo(data);
               resolve(data);
             }
           })
