@@ -11,9 +11,10 @@ import type {
 } from "./types.d";
 import { stringify } from "qs";
 import NProgress from "../progress";
-import { getToken, formatToken } from "@/utils/auth";
+import { getToken, formatToken, removeToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { checkStatus, SUCCESS } from "@/utils/http/result";
+import router from "@/router";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -81,13 +82,9 @@ class PureHttp {
           ? config
           : new Promise(resolve => {
               const data = getToken();
-              console.log("token: ", data);
-              console.log("config: ", config);
               if (data) {
                 const now = new Date().getTime();
                 const expired = parseInt(data.expires) - now <= 0;
-                console.log("expired: ", data.expires);
-                console.log("now: ", now);
                 if (expired) {
                   if (!PureHttp.isRefreshing) {
                     PureHttp.isRefreshing = true;
@@ -100,7 +97,6 @@ class PureHttp {
                         refresh_token: data.refreshToken.tokenValue
                       })
                       .then(res => {
-                        console.log("refreshToken: ", res);
                         const token = res.accessToken;
                         config.headers["Authorization"] = formatToken(token);
                         PureHttp.requests.forEach(cb => cb(token));
@@ -136,11 +132,9 @@ class PureHttp {
         const $config = response.config;
         // 关闭进度条动画
         NProgress.done();
-        console.log("response.data: ", response.data);
         if (response.data.code !== SUCCESS) {
           checkStatus(response.data.code, response.data.message);
           throw new Error("请求失败，请稍后重试");
-          // return response.data.data;
         }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {

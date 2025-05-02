@@ -121,7 +121,7 @@ export const useUserStore = defineStore("pure-user", {
         refreshTokenApi(data)
           .then(data => {
             if (data) {
-              // setToken(data.data);
+              setToken(data);
               resolve(data);
             }
           })
