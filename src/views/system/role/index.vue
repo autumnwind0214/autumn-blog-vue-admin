@@ -62,7 +62,6 @@ const {
   isExpandAll,
   isSelectAll,
   treeSearchValue,
-  // buttonClass,
   onSearch,
   resetForm,
   openDialog,
@@ -72,7 +71,6 @@ const {
   filterMethod,
   transformI18n,
   onQueryChanged,
-  // handleDatabase,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange
@@ -100,7 +98,7 @@ onMounted(() => {
     >
       <el-form-item label="角色名称：" prop="name">
         <el-input
-          v-model="form.name"
+          v-model="form.roleName"
           placeholder="请输入角色名称"
           clearable
           class="w-[180px]!"
@@ -108,7 +106,7 @@ onMounted(() => {
       </el-form-item>
       <el-form-item label="角色标识：" prop="code">
         <el-input
-          v-model="form.code"
+          v-model="form.permission"
           placeholder="请输入角色标识"
           clearable
           class="w-[180px]!"
@@ -116,7 +114,7 @@ onMounted(() => {
       </el-form-item>
       <el-form-item label="状态：" prop="status">
         <el-select
-          v-model="form.status"
+          v-model="form.isLock"
           placeholder="请选择状态"
           clearable
           class="w-[180px]!"
@@ -147,7 +145,7 @@ onMounted(() => {
       <PureTableBar
         :class="[isShow && !deviceDetection() ? 'w-[60vw]!' : 'w-full']"
         style="transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1)"
-        title="角色管理（仅演示，操作后不生效）"
+        title="角色管理"
         :columns="columns"
         @refresh="onSearch"
       >
@@ -199,6 +197,7 @@ onMounted(() => {
               >
                 <template #reference>
                   <el-button
+                    v-if="row.id !== 1"
                     class="reset-margin"
                     link
                     type="primary"
@@ -219,43 +218,6 @@ onMounted(() => {
               >
                 权限
               </el-button>
-              <!-- <el-dropdown>
-              <el-button
-                class="ml-3 mt-[2px]"
-                link
-                type="primary"
-                :size="size"
-                :icon="useRenderIcon(More)"
-              />
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>
-                    <el-button
-                      :class="buttonClass"
-                      link
-                      type="primary"
-                      :size="size"
-                      :icon="useRenderIcon(Menu)"
-                      @click="handleMenu"
-                    >
-                      菜单权限
-                    </el-button>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-button
-                      :class="buttonClass"
-                      link
-                      type="primary"
-                      :size="size"
-                      :icon="useRenderIcon(Database)"
-                      @click="handleDatabase"
-                    >
-                      数据权限
-                    </el-button>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown> -->
             </template>
           </pure-table>
         </template>

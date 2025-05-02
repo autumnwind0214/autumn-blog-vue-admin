@@ -20,7 +20,7 @@ export const getUserInfo = () => {
 
 /** 用户管理-列表 */
 export const getUserList = (data?: object) => {
-  return http.request<ResultTable>("post", `${prefix}/user/list`, { data });
+  return http.request<ResultTable>("post", `${prefix}/user/listPage`, { data });
 };
 
 /** 用户管理-新增 */

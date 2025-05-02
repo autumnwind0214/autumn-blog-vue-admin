@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import editForm from "../form.vue";
-import { handleTree } from "@/utils/tree";
 import { message } from "@/utils/message";
 import { ElMessageBox } from "element-plus";
 import { usePublicHooks } from "../../hooks";
@@ -8,19 +7,22 @@ import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
 import type { FormItemProps } from "../utils/types";
 import type { PaginationProps } from "@pureadmin/table";
-import { getKeyList, deviceDetection } from "@pureadmin/utils";
-import {
-  getRoleList,
-  getRoleMenu,
-  getRoleMenuIds
-} from "@/api/modules/system/system";
+import { deviceDetection } from "@pureadmin/utils";
 import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
+import {
+  editRoleStatusApi,
+  getRoleListApi,
+  getRoleMenuApi,
+  getRoleMenuIdApi
+} from "@/api/modules/system/role";
+import { getKeyList } from "@/store/utils";
+import { handleTree } from "@/utils/tree";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
-    name: "",
-    code: "",
-    status: ""
+    roleName: "",
+    permission: "",
+    isLock: ""
   });
   const curRow = ref();
   const formRef = ref();
@@ -53,11 +55,11 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "角色名称",
-      prop: "name"
+      prop: "roleName"
     },
     {
       label: "角色标识",
-      prop: "code"
+      prop: "permission"
     },
     {
       label: "状态",
@@ -65,22 +67,18 @@ export function useRole(treeRef: Ref) {
         <el-switch
           size={scope.props.size === "small" ? "small" : "default"}
           loading={switchLoadMap.value[scope.index]?.loading}
-          v-model={scope.row.status}
+          v-model={scope.row.isLock}
           active-value={1}
           inactive-value={0}
           active-text="已启用"
           inactive-text="已停用"
           inline-prompt
           style={switchStyle.value}
+          disabled={scope.row.id === 1}
           onChange={() => onChange(scope as any)}
         />
       ),
       minWidth: 90
-    },
-    {
-      label: "备注",
-      prop: "remark",
-      minWidth: 160
     },
     {
       label: "创建时间",
@@ -96,20 +94,11 @@ export function useRole(treeRef: Ref) {
       slot: "operation"
     }
   ];
-  // const buttonClass = computed(() => {
-  //   return [
-  //     "h-[20px]!",
-  //     "reset-margin",
-  //     "text-gray-500!",
-  //     "dark:text-white!",
-  //     "dark:hover:text-primary!"
-  //   ];
-  // });
 
   function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
-        row.status === 0 ? "停用" : "启用"
+        row.isLock === 0 ? "停用" : "启用"
       }</strong><strong style='color:var(--el-color-primary)'>${
         row.name
       }</strong>吗?`,
@@ -122,7 +111,7 @@ export function useRole(treeRef: Ref) {
         draggable: true
       }
     )
-      .then(() => {
+      .then(async () => {
         switchLoadMap.value[index] = Object.assign(
           {},
           switchLoadMap.value[index],
@@ -130,21 +119,37 @@ export function useRole(treeRef: Ref) {
             loading: true
           }
         );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message(`已${row.status === 0 ? "停用" : "启用"}${row.name}`, {
-            type: "success"
+        await editRoleStatusApi(row?.id ?? null, row?.isLock ?? 0)
+          .then(() => {
+            setTimeout(() => {
+              switchLoadMap.value[index] = Object.assign(
+                {},
+                switchLoadMap.value[index],
+                {
+                  loading: false
+                }
+              );
+              message(
+                `已${row.isLock === 0 ? "停用" : "启用"}${row.roleName}`,
+                {
+                  type: "success"
+                }
+              );
+            }, 300);
+          })
+          .catch(() => {
+            row.isLock === 0 ? (row.isLock = 1) : (row.isLock = 0);
           });
-        }, 300);
+        switchLoadMap.value[index] = Object.assign(
+          {},
+          switchLoadMap.value[index],
+          {
+            loading: false
+          }
+        );
       })
       .catch(() => {
-        row.status === 0 ? (row.status = 1) : (row.status = 0);
+        row.isLock === 0 ? (row.isLock = 1) : (row.isLock = 0);
       });
   }
 
@@ -167,11 +172,11 @@ export function useRole(treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getRoleList(toRaw(form));
-    dataList.value = data.list;
+    const data = await getRoleListApi(toRaw(form));
+    dataList.value = data.records;
     pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    pagination.pageSize = data.size;
+    pagination.currentPage = data.current;
 
     setTimeout(() => {
       loading.value = false;
@@ -189,9 +194,8 @@ export function useRole(treeRef: Ref) {
       title: `${title}角色`,
       props: {
         formInline: {
-          name: row?.name ?? "",
-          code: row?.code ?? "",
-          remark: row?.remark ?? ""
+          roleName: row?.roleName ?? "",
+          permission: row?.permission ?? ""
         }
       },
       width: "40%",
@@ -203,13 +207,15 @@ export function useRole(treeRef: Ref) {
       beforeSure: (done, { options }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
+
         function chores() {
-          message(`您${title}了角色名称为${curData.name}的这条数据`, {
+          message(`您${title}了角色名称为${curData.roleName}的这条数据`, {
             type: "success"
           });
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
+
         FormRef.validate(valid => {
           if (valid) {
             console.log("curData", curData);
@@ -233,7 +239,7 @@ export function useRole(treeRef: Ref) {
     if (id) {
       curRow.value = row;
       isShow.value = true;
-      const { data } = await getRoleMenuIds({ id });
+      const data = await getRoleMenuIdApi(id);
       treeRef.value.setCheckedKeys(data);
     } else {
       curRow.value = null;
@@ -272,7 +278,7 @@ export function useRole(treeRef: Ref) {
 
   onMounted(async () => {
     onSearch();
-    const { data } = await getRoleMenu();
+    const data = await getRoleMenuApi();
     treeIds.value = getKeyList(data, "id");
     treeData.value = handleTree(data);
   });
@@ -304,7 +310,6 @@ export function useRole(treeRef: Ref) {
     isExpandAll,
     isSelectAll,
     treeSearchValue,
-    // buttonClass,
     onSearch,
     resetForm,
     openDialog,
@@ -314,7 +319,6 @@ export function useRole(treeRef: Ref) {
     filterMethod,
     transformI18n,
     onQueryChanged,
-    // handleDatabase,
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange
