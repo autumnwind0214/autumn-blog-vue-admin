@@ -22,11 +22,12 @@ buttons:
   pureUserAdd: 新增用户
   pureUserEdit: 编辑用户
   pureUserDelete: 删除用户
-  pureUserStatus: 修改状态
+  pureUserStatus: 用户状态
   pureRoleAdd: 新增角色
   pureRoleEdit: 编辑角色
   pureRoleDelete: 删除角色
   pureRolePermission: 角色权限
+  pureRoleIsLock: 角色锁定
   pureMenuAdd: 新增菜单
   pureMenuEdit: 编辑菜单
   pureMenuDelete: 删除菜单

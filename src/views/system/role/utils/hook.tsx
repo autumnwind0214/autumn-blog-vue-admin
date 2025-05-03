@@ -10,10 +10,12 @@ import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
 import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
 import {
+  addRoleApi, delRoleApi, editRoleApi,
   editRoleStatusApi,
   getRoleListApi,
   getRoleMenuApi,
-  getRoleMenuIdApi
+  getRoleMenuIdApi,
+  roleAuthApi
 } from "@/api/modules/system/role";
 import { getKeyList } from "@/store/utils";
 import { handleTree } from "@/utils/tree";
@@ -153,8 +155,10 @@ export function useRole(treeRef: Ref) {
       });
   }
 
-  function handleDelete(row) {
-    message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
+  async function handleDelete(row) {
+    await delRoleApi([row.id]).then(() => {
+      message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
+    });
     onSearch();
   }
 
@@ -194,6 +198,7 @@ export function useRole(treeRef: Ref) {
       title: `${title}角色`,
       props: {
         formInline: {
+          id: row?.id ?? null,
           roleName: row?.roleName ?? "",
           permission: row?.permission ?? ""
         }
@@ -216,15 +221,17 @@ export function useRole(treeRef: Ref) {
           onSearch(); // 刷新表格数据
         }
 
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
+              await addRoleApi(curData);
               chores();
             } else {
               // 实际开发先调用修改接口，再进行下面操作
+              await editRoleApi(curData);
               chores();
             }
           }
@@ -256,12 +263,17 @@ export function useRole(treeRef: Ref) {
   }
 
   /** 菜单权限-保存 */
-  function handleSave() {
-    const { id, name } = curRow.value;
+  async function handleSave() {
+    const { id, roleName } = curRow.value;
     // 根据用户 id 调用实际项目中菜单权限修改接口
     console.log(id, treeRef.value.getCheckedKeys());
-    message(`角色名称为${name}的菜单权限修改成功`, {
-      type: "success"
+    await roleAuthApi({
+      roleId: id,
+      permission: treeRef.value.getCheckedKeys()
+    }).then(() => {
+      message(`角色名称为${roleName}的菜单权限修改成功`, {
+        type: "success"
+      });
     });
   }
 

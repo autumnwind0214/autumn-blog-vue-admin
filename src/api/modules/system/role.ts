@@ -1,5 +1,6 @@
 import { http } from "@/utils/http";
 import type { ResultTable } from "@/api/result";
+
 const prefix = "/system-api";
 
 /** 获取角色列表 */
@@ -24,4 +25,24 @@ export const editRoleStatusApi = (id: number, isLock: number) => {
     `${prefix}/role/isLock/${id}/${isLock}`,
     {}
   );
+};
+
+/** 修改角色权限 */
+export const roleAuthApi = (data?: object) => {
+  return http.request<boolean>("put", `${prefix}/role/auth`, { data });
+};
+
+/** 新增角色 */
+export const addRoleApi = (data?: object) => {
+  return http.request<boolean>("post", `${prefix}/role`, { data });
+};
+
+/** 修改角色 */
+export const editRoleApi = (data?: object) => {
+  return http.request<boolean>("put", `${prefix}/role`, { data });
+};
+
+/** 删除角色 */
+export const delRoleApi = (ids?: Array<number>) => {
+  return http.request<boolean>("delete", `${prefix}/role/${ids}`, {});
 };
