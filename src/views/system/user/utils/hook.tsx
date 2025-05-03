@@ -40,7 +40,7 @@ import {
   deleteUser,
   editUser,
   editUserStatus,
-  getUserList, getUserRoleIds
+  getUserList, getUserRoleIds, uploadAvatarApi
 } from "@/api/modules/system/user";
 import { getAllRoleListApi } from "@/api/modules/system/role";
 
@@ -391,7 +391,8 @@ export function useUser(tableRef: Ref) {
           onCropper: info => (avatarInfo.value = info)
         }),
       beforeSure: done => {
-        console.log("裁剪后的图片信息：", avatarInfo.value);
+        // await uploadAvatarApi({userId: row.id, avatar: avatarInfo.value.base64})
+        console.log("裁剪后的图片信息：", avatarInfo.value.base64);
         // 根据实际业务使用avatarInfo.value和row里的某些字段去调用上传头像接口即可
         done(); // 关闭弹框
         onSearch(); // 刷新表格数据
@@ -540,6 +541,8 @@ export function useUser(tableRef: Ref) {
         await assignRoleApi({
           userId: row.id,
           roleIds: curData.ids
+        }).then(() => {
+          message(`已成功分配 ${row.username} 用户的角色`, {})
         });
         // 根据实际业务使用curData.ids和row里的某些字段去调用修改角色接口即可
         done(); // 关闭弹框

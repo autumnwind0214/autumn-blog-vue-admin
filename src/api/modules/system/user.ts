@@ -67,3 +67,8 @@ export const getUserRoleIds = (userId?: object) => {
 export const assignRoleApi = (data?: object) => {
   return http.request<boolean>("put", `${prefix}/user/assignRole`, { data });
 };
+
+/** 用户管理-上传头像 */
+export const uploadAvatarApi = (data?: object) => {
+  return http.request<boolean>("put", `${prefix}/user/uploadAvatar`, { data });
+}
