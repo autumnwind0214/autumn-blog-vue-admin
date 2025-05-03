@@ -35,13 +35,14 @@ import {
   onMounted
 } from "vue";
 import {
-  addUser,
+  addUser, assignRoleApi,
   changePassword,
   deleteUser,
   editUser,
   editUserStatus,
-  getUserList
+  getUserList, getUserRoleIds
 } from "@/api/modules/system/user";
+import { getAllRoleListApi } from "@/api/modules/system/role";
 
 export function useUser(tableRef: Ref) {
   const form = reactive({
@@ -517,7 +518,7 @@ export function useUser(tableRef: Ref) {
   /** 分配角色 */
   async function handleRole(row) {
     // 选中的角色列表
-    const ids = (await getRoleIds({ userId: row.id })).data ?? [];
+    const ids = (await getUserRoleIds(row.id)) ?? [];
     addDialog({
       title: `分配 ${row.username} 用户的角色`,
       props: {
@@ -534,9 +535,12 @@ export function useUser(tableRef: Ref) {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(roleForm),
-      beforeSure: (done, { options }) => {
+      beforeSure: async (done, { options }) => {
         const curData = options.props.formInline as RoleFormItemProps;
-        console.log("curIds", curData.ids);
+        await assignRoleApi({
+          userId: row.id,
+          roleIds: curData.ids
+        });
         // 根据实际业务使用curData.ids和row里的某些字段去调用修改角色接口即可
         done(); // 关闭弹框
       }
@@ -547,8 +551,8 @@ export function useUser(tableRef: Ref) {
     treeLoading.value = true;
     onSearch();
 
-    // todo 角色列表
-    // roleOptions.value = (await getAllRoleList()).data;
+    // 角色列表
+    roleOptions.value = await getAllRoleListApi();
   });
 
   return {

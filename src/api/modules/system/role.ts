@@ -18,7 +18,12 @@ export const getRoleMenuApi = () => {
   return http.request<Array<any>>("get", `${prefix}/role/roleMenus`, {});
 };
 
-/** 获取角色详情 */
+/** 获取所有角色列表 */
+export const getAllRoleListApi = () => {
+  return http.request<Array<any>>("get", `${prefix}/role/listAll`, {});
+};
+
+/** 修改角色锁定 */
 export const editRoleStatusApi = (id: number, isLock: number) => {
   return http.request<boolean>(
     "put",

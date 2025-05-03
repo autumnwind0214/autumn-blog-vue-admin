@@ -53,3 +53,17 @@ export const changePassword = (data?: object) => {
     data
   });
 };
+
+/** 用户管理-用户角色 */
+export const getUserRoleIds = (userId?: object) => {
+  return http.request<Array<number>>(
+    "get",
+    `${prefix}/user/roleIds/${userId}`,
+    {}
+  );
+};
+
+/** 用户管理-分配角色 */
+export const assignRoleApi = (data?: object) => {
+  return http.request<boolean>("put", `${prefix}/user/assignRole`, { data });
+};
