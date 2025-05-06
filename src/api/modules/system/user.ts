@@ -9,14 +9,14 @@ export const getUserInfo = () => {
 };
 
 /** 账户设置-个人信息 */
-// export const getMine = (data?: object) => {
-//   return http.request<UserInfo>("get", "/mine", { data });
-// };
-//
-// /** 账户设置-个人安全日志 */
-// export const getMineLogs = (data?: object) => {
-//   return http.request<ResultTable>("get", "/mine-logs", { data });
-// };
+export const getMine = () => {
+  return http.request<UserInfo>("get", `${prefix}/user`, {});
+};
+
+/** todo 账户设置-个人安全日志 */
+export const getMineLogs = (data?: object) => {
+  return http.request<ResultTable>("get", "/mine-logs", { data });
+};
 
 /** 用户管理-列表 */
 export const getUserList = (data?: object) => {
@@ -71,4 +71,4 @@ export const assignRoleApi = (data?: object) => {
 /** 用户管理-上传头像 */
 export const uploadAvatarApi = (data?: object) => {
   return http.request<boolean>("put", `${prefix}/user/uploadAvatar`, { data });
-}
+};

@@ -16,7 +16,6 @@ import {
   hideTextAtIndex,
   deviceDetection
 } from "@pureadmin/utils";
-import { getRoleIds } from "@/api/modules/system/system";
 import {
   ElForm,
   ElInput,
@@ -390,9 +389,13 @@ export function useUser(tableRef: Ref) {
           imgSrc: row.avatar || userAvatar,
           onCropper: info => (avatarInfo.value = info)
         }),
-      beforeSure: done => {
-        // await uploadAvatarApi({userId: row.id, avatar: avatarInfo.value.base64})
-        console.log("裁剪后的图片信息：", avatarInfo.value.base64);
+      beforeSure: async done => {
+        await uploadAvatarApi({
+          userId: row.id,
+          avatar: avatarInfo.value.base64
+        }).then(() => {
+          message("修改头像成功", { type: "success" });
+        });
         // 根据实际业务使用avatarInfo.value和row里的某些字段去调用上传头像接口即可
         done(); // 关闭弹框
         onSearch(); // 刷新表格数据

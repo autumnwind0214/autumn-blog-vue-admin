@@ -203,9 +203,8 @@ const {
                         上传头像
                       </el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item>
+                    <el-dropdown-item v-if="row.id !== 1">
                       <el-button
-                        v-if="row.id !== 1"
                         :class="buttonClass"
                         link
                         type="primary"

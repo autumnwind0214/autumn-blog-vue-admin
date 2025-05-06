@@ -2,11 +2,12 @@
 import { reactive, ref } from "vue";
 import { formUpload } from "@/api/modules/system/mock";
 import { message } from "@/utils/message";
-import { type UserInfo, getMine } from "@/api/modules/system/user";
+import { getMine } from "@/api/modules/system/user";
 import type { FormInstance, FormRules } from "element-plus";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import { createFormData, deviceDetection } from "@pureadmin/utils";
 import uploadLine from "~icons/ri/upload-line";
+import { UserInfo } from "@/api/types/system/user";
 
 defineOptions({
   name: "Profile"

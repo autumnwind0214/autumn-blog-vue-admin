@@ -19,10 +19,26 @@ const refCropper = ref();
 const showPopover = ref(false);
 const cropperImg = ref<string>("");
 
-function onCropper({ base64, blob, info }) {
+async function onCropper({ base64, blob, info }) {
+  const resizeBase64 = await resizeImage(base64, 128, 128);
   infos.value = info;
-  cropperImg.value = base64;
+  cropperImg.value = resizeBase64;
   emit("cropper", { base64, blob, info });
+}
+
+function resizeImage(base64, targetWidth = 128, targetHeight = 128) {
+  return new Promise<string>(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.src = base64;
+  });
 }
 
 function hidePopover() {
