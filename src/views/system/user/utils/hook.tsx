@@ -125,14 +125,12 @@ export function useUser(tableRef: Ref) {
     {
       label: "手机号码",
       prop: "phone",
-      minWidth: 90,
-      formatter: ({ phone }) => hideTextAtIndex(phone, { start: 3, end: 6 })
+      minWidth: 90
     },
     {
       label: "邮箱",
       prop: "email",
-      minWidth: 90,
-      formatter: ({ email }) => hideTextAtIndex(email, { start: 3, end: 6 })
+      minWidth: 90
     },
     {
       label: "状态",
@@ -499,7 +497,6 @@ export function useUser(tableRef: Ref) {
       beforeSure: done => {
         ruleFormRef.value.validate(async valid => {
           if (valid) {
-            // todo 需要对密码进行加密传参
             await changePassword({
               userId: row.id,
               password: encryptByAES(pwdForm.newPwd),

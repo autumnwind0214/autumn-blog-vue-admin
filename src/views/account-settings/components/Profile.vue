@@ -100,7 +100,7 @@ const onSubmit = async (formEl: FormInstance) => {
 };
 
 getMine().then(res => {
-  Object.assign(userInfos, res.data);
+  Object.assign(userInfos, res);
 });
 </script>
 

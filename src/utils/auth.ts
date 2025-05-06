@@ -71,6 +71,9 @@ export function setToken(data: AccessToken) {
 
 /** 保存用户信息 */
 export function setUserInfo(data: LoginUser) {
+  useUserStoreHook().SET_AVATAR(data.avatar);
+  useUserStoreHook().SET_NICKNAME(data.nickname);
+  useUserStoreHook().SET_PERMS(data.permissions);
   storageLocal().setItem(userKey, JSON.stringify(data));
 }
 
