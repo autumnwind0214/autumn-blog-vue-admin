@@ -369,7 +369,7 @@ function hasAuth(value: string | Array<string>): boolean {
   const isAuths = isString(value)
     ? metaAuths.includes(value)
     : isIncludeAllChildren(value, metaAuths);
-  return isAuths ? true : false;
+  return !!isAuths;
 }
 
 function handleTopMenu(route) {

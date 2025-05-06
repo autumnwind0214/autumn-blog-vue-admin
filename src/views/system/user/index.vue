@@ -12,6 +12,7 @@ import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
 import AddFill from "~icons/ri/add-circle-line";
+import Auth from "@/components/ReAuth/src/auth";
 
 defineOptions({
   name: "SystemUser"
@@ -99,13 +100,15 @@ const {
 
       <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
         <template #buttons>
-          <el-button
-            type="primary"
-            :icon="useRenderIcon(AddFill)"
-            @click="openDialog()"
-          >
-            新增用户
-          </el-button>
+          <Auth value="system:user:add">
+            <el-button
+              type="primary"
+              :icon="useRenderIcon(AddFill)"
+              @click="openDialog()"
+            >
+              新增用户
+            </el-button>
+          </Auth>
         </template>
         <template v-slot="{ size, dynamicColumns }">
           <div
@@ -126,9 +129,11 @@ const {
             </div>
             <el-popconfirm title="是否确认删除?" @confirm="onBatchDel">
               <template #reference>
-                <el-button type="danger" text class="mr-1!">
-                  批量删除
-                </el-button>
+                <Auth value="system:user:delete">
+                  <el-button type="danger" text class="mr-1!">
+                    批量删除
+                  </el-button>
+                </Auth>
               </template>
             </el-popconfirm>
           </div>

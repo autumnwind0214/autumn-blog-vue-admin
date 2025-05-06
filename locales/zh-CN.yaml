@@ -19,6 +19,7 @@ buttons:
   pureBackTop: 回到顶部
   pureOpenText: 开
   pureCloseText: 关
+  # ================================= 权限按钮 ================================= #
   pureUserAdd: 新增用户
   pureUserEdit: 编辑用户
   pureUserDelete: 删除用户
