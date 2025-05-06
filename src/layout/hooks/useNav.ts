@@ -17,6 +17,9 @@ import { usePermissionStoreHook } from "@/store/modules/permission";
 import ExitFullscreen from "~icons/ri/fullscreen-exit-fill";
 import Fullscreen from "~icons/ri/fullscreen-fill";
 import { logoutApi } from "@/api/login";
+import { storageLocal } from "@/store/utils";
+import type { UserInfo } from "@/api/types/system/user";
+import { userKey } from "@/utils/auth";
 
 const errorInfo =
   "The current routing configuration is incorrect, please check the configuration";

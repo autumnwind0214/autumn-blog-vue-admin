@@ -4,7 +4,7 @@ import { storageLocal, isString, isIncludeAllChildren } from "@pureadmin/utils";
 import CryptoJS from "crypto-js";
 import type { AccessToken } from "@/api/login";
 import { jwtDecode } from "jwt-decode";
-import type { LoginUser } from "@/api/types/system/user";
+import type { LoginUser, UserInfo } from "@/api/types/system/user";
 import type { DecodeToken } from "@/api/login";
 
 export const userKey = "user-info";
@@ -60,21 +60,40 @@ export function setToken(data: AccessToken) {
   // 解析access_token 获取用户和权限信息
   const decodeToken = jwtDecode<DecodeToken>(data.accessToken);
   const uniqueIdObj = JSON.parse(decodeToken.uniqueId);
-  const userInfo: LoginUser = {
-    id: uniqueIdObj.id,
-    avatar: uniqueIdObj.avatar,
-    nickname: uniqueIdObj.nickname,
-    permissions: decodeToken.authorities
-  };
-  setUserInfo(userInfo);
-}
 
-/** 保存用户信息 */
-export function setUserInfo(data: LoginUser) {
-  useUserStoreHook().SET_AVATAR(data.avatar);
-  useUserStoreHook().SET_NICKNAME(data.nickname);
-  useUserStoreHook().SET_PERMS(data.permissions);
-  storageLocal().setItem(userKey, JSON.stringify(data));
+  function setUserKey({ avatar, username, nickname, permissions }) {
+    useUserStoreHook().SET_AVATAR(avatar);
+    useUserStoreHook().SET_USERNAME(username);
+    useUserStoreHook().SET_NICKNAME(nickname);
+    useUserStoreHook().SET_PERMS(permissions);
+    storageLocal().setItem(userKey, {
+      avatar,
+      username,
+      nickname,
+      permissions
+    });
+  }
+
+  if (uniqueIdObj.nickname) {
+    setUserKey({
+      avatar: uniqueIdObj?.avatar ?? "",
+      username: uniqueIdObj?.username ?? "",
+      nickname: uniqueIdObj?.nickname ?? "",
+      permissions: uniqueIdObj?.authorities ?? []
+    });
+  } else {
+    const avatar = storageLocal().getItem<UserInfo>(userKey)?.avatar ?? "";
+    const username = storageLocal().getItem<UserInfo>(userKey)?.username ?? "";
+    const nickname = storageLocal().getItem<UserInfo>(userKey)?.nickname ?? "";
+    const permissions =
+      storageLocal().getItem<UserInfo>(userKey)?.permissions ?? [];
+    setUserKey({
+      avatar,
+      username,
+      nickname,
+      permissions
+    });
+  }
 }
 
 /** 删除`token`以及key值为`user-info`的localStorage信息 */
