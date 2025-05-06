@@ -42,6 +42,7 @@ import {
   getUserList, getUserRoleIds, uploadAvatarApi
 } from "@/api/modules/system/user";
 import { getAllRoleListApi } from "@/api/modules/system/role";
+import { encryptByAES } from "@/utils/auth";
 
 export function useUser(tableRef: Ref) {
   const form = reactive({
@@ -501,8 +502,8 @@ export function useUser(tableRef: Ref) {
             // todo 需要对密码进行加密传参
             await changePassword({
               userId: row.id,
-              password: pwdForm.newPwd,
-              confirmPwd: pwdForm.confirmPwd
+              password: encryptByAES(pwdForm.newPwd),
+              confirmPwd: encryptByAES(pwdForm.confirmPwd)
             }).then(() => {
               // 表单规则校验通过
               message(`已成功重置 ${row.username} 用户的密码`, {

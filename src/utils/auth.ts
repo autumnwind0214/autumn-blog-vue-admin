@@ -174,3 +174,31 @@ export function base64URL(str: CryptoJS.lib.WordArray) {
 export function base64Str(str: string) {
   return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
 }
+
+const key = "1234567890123456"; // 必须为 16 字节
+const iv = "1234567890123456"; // 必须为 16 字节
+/**
+ * AES 加密字符串
+ */
+export function encryptByAES(content: string) {
+  const cipher = CryptoJS.AES.encrypt(content, CryptoJS.enc.Utf8.parse(key), {
+    iv: CryptoJS.enc.Utf8.parse(iv),
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  });
+  return cipher.toString();
+}
+
+/**
+ * 使用 AES 解密字符串
+ * @returns 解密后的明文字符串
+ */
+export function decryptByAES(content: string): string {
+  const decipher = CryptoJS.AES.decrypt(content, CryptoJS.enc.Utf8.parse(key), {
+    iv: CryptoJS.enc.Utf8.parse(iv),
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  });
+  // 返回 UTF-8 明文
+  return decipher.toString(CryptoJS.enc.Utf8);
+}
