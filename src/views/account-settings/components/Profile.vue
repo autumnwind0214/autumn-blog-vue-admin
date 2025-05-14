@@ -2,7 +2,7 @@
 import { reactive, ref } from "vue";
 import { formUpload } from "@/api/modules/system/mock";
 import { message } from "@/utils/message";
-import { getMine } from "@/api/modules/system/user";
+import { editMine, getMine } from "@/api/modules/system/user";
 import type { FormInstance, FormRules } from "element-plus";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import { createFormData, deviceDetection } from "@pureadmin/utils";
@@ -21,6 +21,7 @@ const isShow = ref(false);
 const userInfoFormRef = ref<FormInstance>();
 
 const userInfos = reactive({
+  id: null,
   avatar: "",
   nickname: "",
   email: "",
@@ -89,9 +90,9 @@ const handleSubmitImage = () => {
 
 // 更新信息
 const onSubmit = async (formEl: FormInstance) => {
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log(userInfos);
+      await editMine(userInfos)
       message("更新信息成功", { type: "success" });
     } else {
       console.log("error submit!", fields);

@@ -29,6 +29,7 @@ onBeforeMount(() => {
 });
 
 const userInfo = ref({
+  id: null,
   avatar: "",
   username: "",
   nickname: ""

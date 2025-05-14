@@ -39,7 +39,7 @@ export type UserInfo = {
   /** 联系电话 */
   mobile: string;
   /** 简介 */
-  description: string;
+  remark: string;
   /** 按钮级别权限 */
   permissions: Array<string>;
   /** 当前登录用户的角色 */

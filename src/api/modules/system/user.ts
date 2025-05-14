@@ -19,6 +19,11 @@ export const getMineLogs = (data?: object) => {
   return http.request<ResultTable>("get", "/mine-logs", { data });
 };
 
+/** 账户设置-修改信息  */
+export const editMine = (data?: object) => {
+  return http.request<boolean>("put", `${prefix}/user/mine`, { data });
+}
+
 /** 用户管理-列表 */
 export const getUserList = (data?: object) => {
   return http.request<ResultTable>("post", `${prefix}/user/listPage`, { data });
