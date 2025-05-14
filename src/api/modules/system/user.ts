@@ -2,7 +2,7 @@ import { http } from "@/utils/http";
 import type { UserInfo } from "@/api/types/system/user";
 import type { ResultTable } from "@/api/result";
 
-const prefix = "/system-api";
+const prefix = "/auth-api";
 
 export const getUserInfo = () => {
   return http.request<UserInfo>("get", `${prefix}/user`);

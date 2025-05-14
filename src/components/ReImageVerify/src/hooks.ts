@@ -30,6 +30,7 @@ export const useImageVerify = (width = 120, height = 40) => {
 
   return {
     domRef,
+    captchaId,
     imgCode,
     setImgCode,
     getImgCode

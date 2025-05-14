@@ -30,14 +30,14 @@ export type LoginUser = {
 export type UserInfo = {
   /** 头像 */
   avatar: string;
-  /** 用户名 */
-  username: string;
+  /** 账号 */
+  account: string;
   /** 昵称 */
   nickname: string;
   /** 邮箱 */
   email: string;
   /** 联系电话 */
-  phone: string;
+  mobile: string;
   /** 简介 */
   description: string;
   /** 按钮级别权限 */

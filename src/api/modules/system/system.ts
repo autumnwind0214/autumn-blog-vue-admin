@@ -1,5 +1,5 @@
 import { http } from "@/utils/http";
-const prefix = "/system-api";
+const prefix = "/auth-api";
 
 type Result = {
   success: boolean;

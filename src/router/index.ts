@@ -185,20 +185,30 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       toCorrectRoute();
     }
   } else {
+    // if (to.path !== "/login") {
+    //   if (whiteList.indexOf(to.path) !== -1) {
+    //     next();
+    //   } else {
+    //     removeToken();
+    //     next({ path: "/codeRedirect" });
+    //   }
+    // } else {
+    //   if (to.fullPath === "/login") {
+    //     removeToken();
+    //     next({ path: "/codeRedirect" });
+    //   } else {
+    //     next();
+    //   }
+    // }
     if (to.path !== "/login") {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
       } else {
         removeToken();
-        next({ path: "/codeRedirect" });
+        next({ path: "/login" });
       }
     } else {
-      if (to.fullPath === "/login") {
-        removeToken();
-        next({ path: "/codeRedirect" });
-      } else {
-        next();
-      }
+      next();
     }
   }
 });

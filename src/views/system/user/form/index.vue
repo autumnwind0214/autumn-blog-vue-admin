@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<FormProps>(), {
     username: "",
     password: "",
     newPassword: "",
-    phone: "",
+    mobile: "",
     email: "",
     sex: "",
     status: 1
@@ -117,7 +117,7 @@ defineExpose({ getRef });
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="newFormInline.phone"
+            v-model="newFormInline.mobile"
             clearable
             placeholder="请输入手机号"
           />

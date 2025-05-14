@@ -32,13 +32,15 @@ import Check from "~icons/ep/check";
 import User from "~icons/ri/user-3-fill";
 import Info from "~icons/ri/information-line";
 import Keyhole from "~icons/ri/shield-keyhole-line";
-import { getQueryParams, getQueryString } from "@/utils/auth";
+import { getTopMenu, initRouter } from "@/router/utils";
+const router = useRouter();
 
 defineOptions({
   name: "Login"
 });
 
 const imgCode = ref("");
+const captchaId = ref("");
 const loginDay = ref(7);
 const loading = ref(false);
 const checked = ref(false);
@@ -68,15 +70,25 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true;
       useUserStoreHook()
-        .loginByUsername({
-          username: ruleForm.username,
-          password: ruleForm.password
+        .handAccessToken({
+          account: ruleForm.username,
+          password: ruleForm.password,
+          verifyCode: ruleForm.verifyCode,
+          captchaId: captchaId.value,
+          loginType: "password_type",
+          grant_type: "password_type"
         })
         .then(res => {
-          let target = getQueryString("target");
-          if (target != null) {
-            window.location.href = target;
-          }
+          // 获取动态路由
+          return initRouter()
+            .then(() => {
+              router.push(getTopMenu(true).path).then(() => {
+                message(t("login.pureLoginSuccess"), { type: "success" });
+              });
+            })
+            .catch((e: any) => {
+              console.log("getAsyncRoutes fail: ", e);
+            });
         })
         .finally(() => (loading.value = false));
     }
@@ -217,7 +229,10 @@ watch(loginDay, value => {
                   :prefix-icon="useRenderIcon(Keyhole)"
                 >
                   <template v-slot:append>
-                    <ReImageVerify v-model:code="imgCode" />
+                    <ReImageVerify
+                      v-model:code="imgCode"
+                      v-model:captchaId="captchaId"
+                    />
                   </template>
                 </el-input>
               </el-form-item>

@@ -24,13 +24,13 @@ export const useUserStore = defineStore("pure-user", {
     // 头像
     avatar: storageLocal().getItem<UserInfo>(userKey)?.avatar ?? "",
     // 用户名
-    username: storageLocal().getItem<UserInfo>(userKey)?.username ?? "",
+    username: storageLocal().getItem<UserInfo>(userKey)?.account ?? "",
     // 昵称
     nickname: storageLocal().getItem<UserInfo>(userKey)?.nickname ?? "",
     // 页面级别权限
     // roles: storageLocal().getItem<UserInfo>(userKey)?.roles ?? [],
     // 按钮级别权限
-    // permissions: storageLocal().getItem<UserInfo>(userKey)?.permissions ?? [],
+    permissions: storageLocal().getItem<UserInfo>(userKey)?.permissions ?? [],
     // 前端生成的验证码（按实际需求替换）
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
@@ -98,10 +98,12 @@ export const useUserStore = defineStore("pure-user", {
       removeToken();
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
-      router.push("/codeRedirect");
+      router.push("/login");
     },
     /** 获取token */
     async handAccessToken(data) {
+      data.client_id = import.meta.env.VITE_OAUTH_CLIENT_ID;
+      data.client_secret = import.meta.env.VITE_OAUTH_CLIENT_SECRET;
       return new Promise<AccessToken>((resolve, reject) => {
         getAccessToken(data)
           .then(data => {
@@ -136,7 +138,6 @@ export const useUserStore = defineStore("pure-user", {
         getUserInfo()
           .then(data => {
             if (data) {
-              // setUserInfo(data);
               resolve(data);
             }
           })

@@ -1,7 +1,7 @@
 import { http } from "@/utils/http";
 import { base64Str } from "@/utils/auth";
 
-const prefix = "/system-api";
+const prefix = "/auth-api";
 
 export type AccessToken = {
   accessToken: string;
@@ -22,6 +22,7 @@ export type AccessToken = {
 export type DecodeToken = {
   authorities: Array<string>;
   scope: Array<string>;
+  // 唯一标识 用户名
   uniqueId: string;
 };
 

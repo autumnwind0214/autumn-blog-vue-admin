@@ -24,8 +24,8 @@ const userInfos = reactive({
   avatar: "",
   nickname: "",
   email: "",
-  phone: "",
-  description: ""
+  mobile: "",
+  remark: ""
 });
 
 const rules = reactive<FormRules<UserInfo>>({
@@ -150,18 +150,18 @@ getMine().then(res => {
       </el-form-item>
       <el-form-item label="联系电话">
         <el-input
-          v-model="userInfos.phone"
+          v-model="userInfos.mobile"
           placeholder="请输入联系电话"
           clearable
         />
       </el-form-item>
       <el-form-item label="简介">
         <el-input
-          v-model="userInfos.description"
+          v-model="userInfos.remark"
           placeholder="请输入简介"
           type="textarea"
           :autosize="{ minRows: 6, maxRows: 8 }"
-          maxlength="56"
+          maxlength="100"
           show-word-limit
         />
       </el-form-item>

@@ -13,7 +13,6 @@ import type { FormItemProps, RoleFormItemProps } from "../utils/types";
 import {
   getKeyList,
   isAllEmpty,
-  hideTextAtIndex,
   deviceDetection
 } from "@pureadmin/utils";
 import {
@@ -34,12 +33,15 @@ import {
   onMounted
 } from "vue";
 import {
-  addUser, assignRoleApi,
+  addUser,
+  assignRoleApi,
   changePassword,
   deleteUser,
   editUser,
   editUserStatus,
-  getUserList, getUserRoleIds, uploadAvatarApi
+  getUserList,
+  getUserRoleIds,
+  uploadAvatarApi
 } from "@/api/modules/system/user";
 import { getAllRoleListApi } from "@/api/modules/system/role";
 import { encryptByAES } from "@/utils/auth";
@@ -99,8 +101,8 @@ export function useUser(tableRef: Ref) {
       width: 90
     },
     {
-      label: "用户名称",
-      prop: "username",
+      label: "账号",
+      prop: "account",
       minWidth: 130
     },
     {
@@ -124,7 +126,7 @@ export function useUser(tableRef: Ref) {
     },
     {
       label: "手机号码",
-      prop: "phone",
+      prop: "mobile",
       minWidth: 90
     },
     {
@@ -141,8 +143,8 @@ export function useUser(tableRef: Ref) {
           size={scope.props.size === "small" ? "small" : "default"}
           loading={switchLoadMap.value[scope.index]?.loading}
           v-model={scope.row.status}
-          active-value={1}
-          inactive-value={0}
+          active-value={true}
+          inactive-value={false}
           active-text="已启用"
           inactive-text="已停用"
           inline-prompt
@@ -155,12 +157,12 @@ export function useUser(tableRef: Ref) {
     {
       label: "上次登录时间",
       minWidth: 90,
-      prop: "lastLoginTime",
-      formatter: ({ lastLoginTime }) => {
-        if (isAllEmpty(lastLoginTime)) {
+      prop: "loginTime",
+      formatter: ({ loginTime }) => {
+        if (isAllEmpty(loginTime)) {
           return "--";
         } else {
-          return dayjs(lastLoginTime).format("YYYY-MM-DD HH:mm:ss");
+          return dayjs(loginTime).format("YYYY-MM-DD HH:mm:ss");
         }
       }
     },
@@ -203,7 +205,7 @@ export function useUser(tableRef: Ref) {
         type: "warning"
       });
       // 直接终止后续流程
-      row.status === 1;
+      row.status === true;
       return;
     }
     ElMessageBox.confirm(
@@ -290,7 +292,6 @@ export function useUser(tableRef: Ref) {
   async function onBatchDel() {
     // 返回当前选中的行
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
-    console.log("ids: ", getKeyList(curSelected, "id"));
     await deleteUser(getKeyList(curSelected, "id")).then(() => {
       // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
       message(`已删除用户编号为 ${getKeyList(curSelected, "id")} 的数据`, {
@@ -332,7 +333,7 @@ export function useUser(tableRef: Ref) {
           username: row?.username ?? "",
           password: row?.password ?? "",
           newPassword: "",
-          phone: row?.phone ?? "",
+          mobile: row?.mobile ?? "",
           email: row?.email ?? "",
           sex: row?.sex ?? "",
           status: row?.status ?? 1

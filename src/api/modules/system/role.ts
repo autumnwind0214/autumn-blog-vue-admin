@@ -1,7 +1,7 @@
 import { http } from "@/utils/http";
 import type { ResultTable } from "@/api/result";
 
-const prefix = "/system-api";
+const prefix = "/auth-api";
 
 /** 获取角色列表 */
 export const getRoleListApi = (data?: object) => {

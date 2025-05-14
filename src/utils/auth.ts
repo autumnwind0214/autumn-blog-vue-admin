@@ -4,7 +4,7 @@ import { storageLocal, isString, isIncludeAllChildren } from "@pureadmin/utils";
 import CryptoJS from "crypto-js";
 import type { AccessToken } from "@/api/login";
 import { jwtDecode } from "jwt-decode";
-import type { LoginUser, UserInfo } from "@/api/types/system/user";
+import type { UserInfo } from "@/api/types/system/user";
 import type { DecodeToken } from "@/api/login";
 
 export const userKey = "user-info";
@@ -59,37 +59,26 @@ export function setToken(data: AccessToken) {
   );
   // 解析access_token 获取用户和权限信息
   const decodeToken = jwtDecode<DecodeToken>(data.accessToken);
-  const uniqueIdObj = JSON.parse(decodeToken.uniqueId);
+  // 查询用户信息
+  useUserStoreHook()
+    .handGetUserInfo()
+    .then((res: UserInfo) => {
+      setUserKey({
+        avatar: res.avatar,
+        account: res.account,
+        nickname: res.nickname,
+        permissions: decodeToken.authorities
+      });
+    });
 
-  function setUserKey({ avatar, username, nickname, permissions }) {
+  function setUserKey({ avatar, account, nickname, permissions }) {
     useUserStoreHook().SET_AVATAR(avatar);
-    useUserStoreHook().SET_USERNAME(username);
+    useUserStoreHook().SET_USERNAME(account);
     useUserStoreHook().SET_NICKNAME(nickname);
     useUserStoreHook().SET_PERMS(permissions);
     storageLocal().setItem(userKey, {
       avatar,
-      username,
-      nickname,
-      permissions
-    });
-  }
-
-  if (uniqueIdObj.nickname) {
-    setUserKey({
-      avatar: uniqueIdObj?.avatar ?? "",
-      username: uniqueIdObj?.username ?? "",
-      nickname: uniqueIdObj?.nickname ?? "",
-      permissions: uniqueIdObj?.authorities ?? []
-    });
-  } else {
-    const avatar = storageLocal().getItem<UserInfo>(userKey)?.avatar ?? "";
-    const username = storageLocal().getItem<UserInfo>(userKey)?.username ?? "";
-    const nickname = storageLocal().getItem<UserInfo>(userKey)?.nickname ?? "";
-    const permissions =
-      storageLocal().getItem<UserInfo>(userKey)?.permissions ?? [];
-    setUserKey({
-      avatar,
-      username,
+      account,
       nickname,
       permissions
     });

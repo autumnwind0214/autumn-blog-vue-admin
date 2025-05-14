@@ -1,7 +1,7 @@
 import { http } from "@/utils/http";
 import type { MenuVo } from "@/api/types/system/routes";
 
-const prefix = "/system-api";
+const prefix = "/auth-api";
 
 /** 系统管理-菜单管理-列表 */
 export const getMenuList = () => {

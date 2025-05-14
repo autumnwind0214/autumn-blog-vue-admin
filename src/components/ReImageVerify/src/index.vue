@@ -12,15 +12,17 @@ interface Props {
 
 interface Emits {
   (e: "update:code", code: string): void;
+  (e: "update:captchaId", captchaId: string): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  code: ""
+  code: "",
+  captchaId: ""
 });
 
 const emit = defineEmits<Emits>();
 
-const { domRef, imgCode, setImgCode, getImgCode } = useImageVerify();
+const { domRef, captchaId, imgCode, setImgCode, getImgCode } = useImageVerify();
 
 watch(
   () => props.code,
@@ -30,6 +32,9 @@ watch(
 );
 watch(imgCode, newValue => {
   emit("update:code", newValue);
+});
+watch(captchaId, newValue => {
+  emit("update:captchaId", newValue);
 });
 
 defineExpose({ getImgCode });
