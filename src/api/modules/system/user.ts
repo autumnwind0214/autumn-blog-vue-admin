@@ -1,16 +1,17 @@
 import { http } from "@/utils/http";
 import type { UserInfo } from "@/api/types/system/user";
 import type { ResultTable } from "@/api/result";
+import type { FormItemProps } from "@/views/system/user/utils/types";
 
 const prefix = "/auth-api";
 
-export const getUserInfo = () => {
-  return http.request<UserInfo>("get", `${prefix}/user`);
+export const getUserInfoApi = (id?: number) => {
+  return http.request<FormItemProps>("get", `${prefix}/user/${id}`, {});
 };
 
 /** 账户设置-个人信息 */
 export const getMine = () => {
-  return http.request<UserInfo>("get", `${prefix}/user`, {});
+  return http.request<UserInfo>("get", `${prefix}/user/mine`, {});
 };
 
 /** todo 账户设置-个人安全日志 */

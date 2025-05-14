@@ -102,8 +102,8 @@ export function useNav() {
 
   /** 退出登录 */
   async function logout() {
-    useUserStoreHook().logOut();
     await logoutApi();
+    useUserStoreHook().logOut();
   }
 
   function backTopMenu() {

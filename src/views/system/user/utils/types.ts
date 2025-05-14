@@ -4,7 +4,7 @@ interface FormItemProps {
   title: string;
   birthday: string;
   nickname: string;
-  username: string;
+  account: string;
   password: string;
   newPassword: string;
   mobile: string | number;

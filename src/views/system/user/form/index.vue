@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<FormProps>(), {
     title: "新增",
     birthday: "",
     nickname: "",
-    username: "",
+    account: "",
     password: "",
     newPassword: "",
     mobile: "",
@@ -50,6 +50,16 @@ defineExpose({ getRef });
   >
     <el-row :gutter="30">
       <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="账号" prop="account">
+          <el-input
+            v-model="newFormInline.account"
+            clearable
+            :disabled="newFormInline.id === 1"
+            placeholder="请输入账号"
+          />
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="用户昵称" prop="nickname">
           <el-input
             v-model="newFormInline.nickname"
@@ -58,17 +68,6 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </re-col>
-      <re-col :value="12" :xs="24" :sm="24">
-        <el-form-item label="用户名称" prop="username">
-          <el-input
-            v-model="newFormInline.username"
-            clearable
-            :disabled="newFormInline.id === 1"
-            placeholder="请输入用户名称"
-          />
-        </el-form-item>
-      </re-col>
-
       <re-col
         v-if="newFormInline.title === '新增'"
         :value="12"

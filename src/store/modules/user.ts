@@ -17,7 +17,7 @@ import {
   refreshTokenApi
 } from "@/api/login";
 import type { UserInfo } from "@/api/types/system/user";
-import { getUserInfo } from "@/api/modules/system/user";
+import { getMine } from "@/api/modules/system/user";
 
 export const useUserStore = defineStore("pure-user", {
   state: (): userType => ({
@@ -135,7 +135,7 @@ export const useUserStore = defineStore("pure-user", {
     /** 获取用户信息 */
     async handGetUserInfo() {
       return new Promise<UserInfo>((resolve, reject) => {
-        getUserInfo()
+        getMine()
           .then(data => {
             if (data) {
               resolve(data);

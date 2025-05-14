@@ -10,11 +10,7 @@ import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import type { FormItemProps, RoleFormItemProps } from "../utils/types";
-import {
-  getKeyList,
-  isAllEmpty,
-  deviceDetection
-} from "@pureadmin/utils";
+import { getKeyList, isAllEmpty, deviceDetection } from "@pureadmin/utils";
 import {
   ElForm,
   ElInput,
@@ -39,6 +35,7 @@ import {
   deleteUser,
   editUser,
   editUserStatus,
+  getUserInfoApi,
   getUserList,
   getUserRoleIds,
   uploadAvatarApi
@@ -321,7 +318,11 @@ export function useUser(tableRef: Ref) {
     onSearch();
   };
 
-  function openDialog(title = "新增", row?: FormItemProps) {
+  async function openDialog(title = "新增", row?: FormItemProps) {
+    if (row?.id) {
+      row = await getUserInfoApi(row?.id);
+      console.log("row: ", row);
+    }
     addDialog({
       title: `${title}用户`,
       props: {
@@ -330,7 +331,7 @@ export function useUser(tableRef: Ref) {
           id: row?.id ?? null,
           birthday: row?.birthday ?? "",
           nickname: row?.nickname ?? "",
-          username: row?.username ?? "",
+          account: row?.account ?? "",
           password: row?.password ?? "",
           newPassword: "",
           mobile: row?.mobile ?? "",
@@ -348,13 +349,15 @@ export function useUser(tableRef: Ref) {
       beforeSure: (done, { options }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
+
         function chores() {
-          message(`您${title}了用户名称为${curData.username}的这条数据`, {
+          message(`您${title}了账号为${curData.account}的这条数据`, {
             type: "success"
           });
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
+
         FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
@@ -523,10 +526,10 @@ export function useUser(tableRef: Ref) {
     // 选中的角色列表
     const ids = (await getUserRoleIds(row.id)) ?? [];
     addDialog({
-      title: `分配 ${row.username} 用户的角色`,
+      title: `分配 ${row.account} 用户的角色`,
       props: {
         formInline: {
-          username: row?.username ?? "",
+          account: row?.account ?? "",
           nickname: row?.nickname ?? "",
           roleOptions: roleOptions.value ?? [],
           ids
@@ -544,7 +547,7 @@ export function useUser(tableRef: Ref) {
           userId: row.id,
           roleIds: curData.ids
         }).then(() => {
-          message(`已成功分配 ${row.username} 用户的角色`, {})
+          message(`已成功分配 ${row.account} 用户的角色`, {});
         });
         // 根据实际业务使用curData.ids和row里的某些字段去调用修改角色接口即可
         done(); // 关闭弹框
