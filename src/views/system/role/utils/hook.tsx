@@ -10,7 +10,9 @@ import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
 import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
 import {
-  addRoleApi, delRoleApi, editRoleApi,
+  addRoleApi,
+  delRoleApi,
+  editRoleApi,
   editRoleStatusApi,
   getRoleListApi,
   getRoleMenuApi,
@@ -102,7 +104,7 @@ export function useRole(treeRef: Ref) {
       `确认要<strong>${
         row.isLock === 0 ? "停用" : "启用"
       }</strong><strong style='color:var(--el-color-primary)'>${
-        row.name
+        row.roleName
       }</strong>吗?`,
       "系统提示",
       {
@@ -157,7 +159,7 @@ export function useRole(treeRef: Ref) {
 
   async function handleDelete(row) {
     await delRoleApi([row.id]).then(() => {
-      message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
+      message(`您删除了角色名称为${row.roleName}的这条数据`, { type: "success" });
     });
     onSearch();
   }

@@ -321,7 +321,6 @@ export function useUser(tableRef: Ref) {
   async function openDialog(title = "新增", row?: FormItemProps) {
     if (row?.id) {
       row = await getUserInfoApi(row?.id);
-      console.log("row: ", row);
     }
     addDialog({
       title: `${title}用户`,

@@ -96,7 +96,7 @@ onMounted(() => {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="角色名称：" prop="name">
+      <el-form-item label="角色名称：" prop="roleName">
         <el-input
           v-model="form.roleName"
           placeholder="请输入角色名称"
@@ -104,7 +104,7 @@ onMounted(() => {
           class="w-[180px]!"
         />
       </el-form-item>
-      <el-form-item label="角色标识：" prop="code">
+      <el-form-item label="角色标识：" prop="permission">
         <el-input
           v-model="form.permission"
           placeholder="请输入角色标识"
@@ -112,7 +112,7 @@ onMounted(() => {
           class="w-[180px]!"
         />
       </el-form-item>
-      <el-form-item label="状态：" prop="status">
+      <el-form-item label="状态：" prop="isLock">
         <el-select
           v-model="form.isLock"
           placeholder="请选择状态"
