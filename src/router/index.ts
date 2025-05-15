@@ -33,7 +33,7 @@ import type { LoginUser } from "@/api/types/system/user";
  */
 const modules: Record<string, any> = import.meta.glob(
   // ["./modules/**/*.ts", "!./modules/**/remaining.ts"],
-  ["./modules/**/home.ts", "!./modules/**/remaining.ts"],
+  ["./modules/**/home.ts", "!./modules/**/remaining.ts",  "./modules/**/error.ts"],
   {
     eager: true
   }

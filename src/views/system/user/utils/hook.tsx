@@ -301,15 +301,17 @@ export function useUser(tableRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const data = await getUserList(toRaw(form));
-    dataList.value = data.records;
-    pagination.total = data.total;
-    pagination.pageSize = data.size;
-    pagination.currentPage = data.current;
+    await getUserList(toRaw(form)).then(data => {
+      dataList.value = data.records;
+      pagination.total = data.total;
+      pagination.pageSize = data.size;
+      pagination.currentPage = data.current;
+    }).finally(() => {
+      setTimeout(() => {
+        loading.value = false;
+      }, 500);
+    });
 
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
   }
 
   const resetForm = formEl => {
@@ -555,7 +557,7 @@ export function useUser(tableRef: Ref) {
   }
 
   onMounted(async () => {
-    treeLoading.value = true;
+    // treeLoading.value = true;
     onSearch();
 
     // 角色列表

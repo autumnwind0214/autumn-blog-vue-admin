@@ -1,4 +1,5 @@
 import { message } from "@/utils/message";
+import { getGlobalRouter } from "@/utils/router";
 
 /**
  * 成功状态
@@ -23,6 +24,7 @@ export const USER_FAIL: number = 202;
  * @return void
  */
 export const checkStatus = (status: number, msg?: string) => {
+  const router = getGlobalRouter();
   switch (status) {
     case 400:
       message(msg || "请求失败！请您稍后重试", { type: "error" });
@@ -32,9 +34,11 @@ export const checkStatus = (status: number, msg?: string) => {
       break;
     case 403:
       message(msg || "当前账号无权限访问！", { type: "error" });
+      router.push({ path: "/error/403" });
       break;
     case 404:
       message(msg || "你所访问的资源不存在！", { type: "error" });
+      router.push({ path: "/error/404" });
       break;
     case 405:
       message(msg || "请求方式错误！请您稍后重试", { type: "error" });
@@ -50,6 +54,7 @@ export const checkStatus = (status: number, msg?: string) => {
       break;
     case 500:
       message(msg || "服务异常！", { type: "error" });
+      router.push({ path: "/error/500" });
       break;
     case 502:
       message(msg || "网关错误！", { type: "error" });
