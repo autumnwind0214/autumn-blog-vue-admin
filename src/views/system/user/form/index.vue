@@ -50,9 +50,9 @@ defineExpose({ getRef });
   >
     <el-row :gutter="30">
       <re-col :value="12" :xs="24" :sm="24">
-        <el-form-item label="账号" prop="account">
+        <el-form-item label="用户名" prop="username">
           <el-input
-            v-model="newFormInline.account"
+            v-model="newFormInline.username"
             clearable
             :disabled="newFormInline.id === 1"
             placeholder="请输入账号"

@@ -71,7 +71,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
       loading.value = true;
       useUserStoreHook()
         .handAccessToken({
-          account: ruleForm.username,
+          username: ruleForm.username,
           password: ruleForm.password,
           verifyCode: ruleForm.verifyCode,
           captchaId: captchaId.value,

@@ -30,8 +30,8 @@ export type LoginUser = {
 export type UserInfo = {
   /** 头像 */
   avatar: string;
-  /** 账号 */
-  account: string;
+  /** 用户名 */
+  username: string;
   /** 昵称 */
   nickname: string;
   /** 邮箱 */

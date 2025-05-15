@@ -65,20 +65,20 @@ export function setToken(data: AccessToken) {
     .then((res: UserInfo) => {
       setUserKey({
         avatar: res.avatar,
-        account: res.account,
+        username: res.username,
         nickname: res.nickname,
         permissions: decodeToken.authorities
       });
     });
 
-  function setUserKey({ avatar, account, nickname, permissions }) {
+  function setUserKey({ avatar, username, nickname, permissions }) {
     useUserStoreHook().SET_AVATAR(avatar);
-    useUserStoreHook().SET_USERNAME(account);
+    useUserStoreHook().SET_USERNAME(username);
     useUserStoreHook().SET_NICKNAME(nickname);
     useUserStoreHook().SET_PERMS(permissions);
     storageLocal().setItem(userKey, {
       avatar,
-      account,
+      username,
       nickname,
       permissions
     });

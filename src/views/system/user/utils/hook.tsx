@@ -98,8 +98,8 @@ export function useUser(tableRef: Ref) {
       width: 90
     },
     {
-      label: "账号",
-      prop: "account",
+      label: "用户名",
+      prop: "username",
       minWidth: 130
     },
     {
@@ -330,7 +330,7 @@ export function useUser(tableRef: Ref) {
           id: row?.id ?? null,
           birthday: row?.birthday ?? "",
           nickname: row?.nickname ?? "",
-          account: row?.account ?? "",
+          username: row?.username ?? "",
           password: row?.password ?? "",
           newPassword: "",
           mobile: row?.mobile ?? "",
@@ -350,7 +350,7 @@ export function useUser(tableRef: Ref) {
         const curData = options.props.formInline as FormItemProps;
 
         function chores() {
-          message(`您${title}了账号为${curData.account}的这条数据`, {
+          message(`您${title}了账号为${curData.username}的这条数据`, {
             type: "success"
           });
           done(); // 关闭弹框
@@ -525,10 +525,10 @@ export function useUser(tableRef: Ref) {
     // 选中的角色列表
     const ids = (await getUserRoleIds(row.id)) ?? [];
     addDialog({
-      title: `分配 ${row.account} 用户的角色`,
+      title: `分配 ${row.username} 用户的角色`,
       props: {
         formInline: {
-          account: row?.account ?? "",
+          username: row?.username ?? "",
           nickname: row?.nickname ?? "",
           roleOptions: roleOptions.value ?? [],
           ids
@@ -546,7 +546,7 @@ export function useUser(tableRef: Ref) {
           userId: row.id,
           roleIds: curData.ids
         }).then(() => {
-          message(`已成功分配 ${row.account} 用户的角色`, {});
+          message(`已成功分配 ${row.username} 用户的角色`, {});
         });
         // 根据实际业务使用curData.ids和row里的某些字段去调用修改角色接口即可
         done(); // 关闭弹框
