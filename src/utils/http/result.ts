@@ -1,5 +1,6 @@
 import { message } from "@/utils/message";
 import { getGlobalRouter } from "@/utils/router";
+import { removeToken } from "@/utils/auth";
 
 /**
  * 成功状态
@@ -31,6 +32,8 @@ export const checkStatus = (status: number, msg?: string) => {
       break;
     case 401:
       message(msg || "登录失效！请您重新登录", { type: "error" });
+      removeToken();
+      router.push({ path: "/login" });
       break;
     case 403:
       message(msg || "当前账号无权限访问！", { type: "error" });

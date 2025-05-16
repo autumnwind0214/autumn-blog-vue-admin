@@ -68,24 +68,32 @@ const handleClose = () => {
   isShow.value = false;
 };
 
-const onCropper = ({ blob }) => (cropperBlob.value = blob);
+const onCropper = ({ info, blob, base64 }) => {
+  cropperBlob.value = blob;
+  console.log("info: ", info.base64);
+  console.log("base64: ", base64);
+}
 
 const handleSubmitImage = () => {
+  console.log("cropRef", cropRef);
+  console.log("cropperBlob->", cropperBlob);
+  // 头像更新
   const formData = createFormData({
     files: new File([cropperBlob.value], "avatar")
   });
-  formUpload(formData)
-    .then(({ success, data }) => {
-      if (success) {
-        message("更新头像成功", { type: "success" });
-        handleClose();
-      } else {
-        message("更新头像失败");
-      }
-    })
-    .catch(error => {
-      message(`提交异常 ${error}`, { type: "error" });
-    });
+  console.log("formUpload", formData);
+  // formUpload(formData)
+  //   .then(({ success, data }) => {
+  //     if (success) {
+  //       message("更新头像成功", { type: "success" });
+  //       handleClose();
+  //     } else {
+  //       message("更新头像失败");
+  //     }
+  //   })
+  //   .catch(error => {
+  //     message(`提交异常 ${error}`, { type: "error" });
+  //   });
 };
 
 // 更新信息
@@ -180,7 +188,7 @@ getMine().then(res => {
       :before-close="handleClose"
       :fullscreen="deviceDetection()"
     >
-      <ReCropperPreview ref="cropRef" :imgSrc="imgSrc" @cropper="onCropper" />
+      <ReCropperPreview :ref=cropRef :imgSrc="imgSrc" @cropper="onCropper" />
       <template #footer>
         <div class="dialog-footer">
           <el-button bg text @click="handleClose">取消</el-button>

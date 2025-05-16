@@ -37,6 +37,7 @@ const newFormInline = ref(props.formInline);
               :key="index"
               :value="item.id"
               :label="item.roleName"
+              :disabled="item.id === 1"
             >
               {{ item.roleName }}
             </el-option>

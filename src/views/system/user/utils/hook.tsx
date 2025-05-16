@@ -414,7 +414,6 @@ export function useUser(tableRef: Ref) {
         }).then(() => {
           message("修改头像成功", { type: "success" });
         });
-        // 根据实际业务使用avatarInfo.value和row里的某些字段去调用上传头像接口即可
         done(); // 关闭弹框
         onSearch(); // 刷新表格数据
       },
