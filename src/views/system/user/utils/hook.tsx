@@ -140,8 +140,8 @@ export function useUser(tableRef: Ref) {
           size={scope.props.size === "small" ? "small" : "default"}
           loading={switchLoadMap.value[scope.index]?.loading}
           v-model={scope.row.status}
-          active-value={true}
-          inactive-value={false}
+          active-value={1}
+          inactive-value={0}
           active-text="已启用"
           inactive-text="已停用"
           inline-prompt
@@ -150,6 +150,18 @@ export function useUser(tableRef: Ref) {
           onChange={() => onChange(scope as any)}
         />
       )
+    },
+    {
+      label: "有效期",
+      minWidth: 90,
+      prop: "accountExpire",
+      formatter: ({ accountExpire }) => {
+        if (isAllEmpty(accountExpire)) {
+          return "--";
+        } else {
+          return dayjs(accountExpire).format("YYYY-MM-DD HH:mm:ss");
+        }
+      }
     },
     {
       label: "上次登录时间",
@@ -301,17 +313,18 @@ export function useUser(tableRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    await getUserList(toRaw(form)).then(data => {
-      dataList.value = data.records;
-      pagination.total = data.total;
-      pagination.pageSize = data.size;
-      pagination.currentPage = data.current;
-    }).finally(() => {
-      setTimeout(() => {
-        loading.value = false;
-      }, 500);
-    });
-
+    await getUserList(toRaw(form))
+      .then(data => {
+        dataList.value = data.records;
+        pagination.total = data.total;
+        pagination.pageSize = data.size;
+        pagination.currentPage = data.current;
+      })
+      .finally(() => {
+        setTimeout(() => {
+          loading.value = false;
+        }, 500);
+      });
   }
 
   const resetForm = formEl => {
@@ -338,7 +351,8 @@ export function useUser(tableRef: Ref) {
           mobile: row?.mobile ?? "",
           email: row?.email ?? "",
           sex: row?.sex ?? "",
-          status: row?.status ?? 1
+          status: row?.status ?? 1,
+          accountExpire: row?.accountExpire ?? ""
         }
       },
       width: "46%",

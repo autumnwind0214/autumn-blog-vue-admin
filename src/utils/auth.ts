@@ -186,8 +186,8 @@ export function base64Str(str: string) {
   return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
 }
 
-const key = "1234567890123456"; // 必须为 16 字节
-const iv = "1234567890123456"; // 必须为 16 字节
+const key = "qwertyuiopasdfgh"; // 必须为 16 字节
+const iv = "jklzxcvbnm123456"; // 必须为 16 字节
 /**
  * AES 加密字符串
  */

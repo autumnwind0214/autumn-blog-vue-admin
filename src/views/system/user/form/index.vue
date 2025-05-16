@@ -10,13 +10,14 @@ const props = withDefaults(defineProps<FormProps>(), {
     title: "新增",
     birthday: "",
     nickname: "",
-    account: "",
+    username: "",
     password: "",
     newPassword: "",
     mobile: "",
     email: "",
     sex: "",
-    status: 1
+    status: 1,
+    accountExpire: ""
   })
 });
 
@@ -33,6 +34,14 @@ const sexOptions = [
 const ruleFormRef = ref();
 const { switchStyle } = usePublicHooks();
 const newFormInline = ref(props.formInline);
+
+const disabledAfterDate = (time: Date) => {
+  return time.getTime() > Date.now();
+};
+
+const disabledBeforeDate = (time: Date) => {
+  return time.getTime() < Date.now();
+};
 
 function getRef() {
   return ruleFormRef.value;
@@ -136,7 +145,7 @@ defineExpose({ getRef });
         <el-form-item label="用户性别">
           <el-select
             v-model="newFormInline.sex"
-            placeholder="请选择用户性别"
+            placeholder="请选择性别"
             class="w-full"
             clearable
           >
@@ -145,6 +154,7 @@ defineExpose({ getRef });
               :key="index"
               :label="item.label"
               :value="item.value"
+              :selected="item.value === 0"
             />
           </el-select>
         </el-form-item>
@@ -155,8 +165,27 @@ defineExpose({ getRef });
           <el-date-picker
             v-model="newFormInline.birthday"
             type="date"
+            class="w-full!"
             placeholder="请选择生日"
-            class="w-full"
+            :disabled-date="disabledAfterDate"
+            :popper-options="{
+              placement: 'bottom-start'
+            }"
+            size="default"
+          />
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="账号有效期">
+          <el-date-picker
+            v-model="newFormInline.accountExpire"
+            type="date"
+            class="w-full!"
+            placeholder="默认一周"
+            :disabled-date="disabledBeforeDate"
+            :popper-options="{
+              placement: 'bottom-start'
+            }"
             size="default"
           />
         </el-form-item>

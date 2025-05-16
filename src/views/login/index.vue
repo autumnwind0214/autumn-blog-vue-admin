@@ -33,6 +33,7 @@ import User from "~icons/ri/user-3-fill";
 import Info from "~icons/ri/information-line";
 import Keyhole from "~icons/ri/shield-keyhole-line";
 import { getTopMenu, initRouter } from "@/router/utils";
+import { encryptByAES } from "@/utils/auth";
 const router = useRouter();
 
 defineOptions({
@@ -72,7 +73,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
       useUserStoreHook()
         .handAccessToken({
           username: ruleForm.username,
-          password: ruleForm.password,
+          password: encryptByAES(ruleForm.password),
           verifyCode: ruleForm.verifyCode,
           captchaId: captchaId.value,
           loginType: "password_type",

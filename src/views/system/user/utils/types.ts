@@ -11,6 +11,7 @@ interface FormItemProps {
   email: string;
   sex: string | number;
   status: number;
+  accountExpire: string;
 }
 interface FormProps {
   formInline: FormItemProps;

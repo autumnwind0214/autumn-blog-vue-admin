@@ -92,8 +92,9 @@ const handleSubmitImage = () => {
 const onSubmit = async (formEl: FormInstance) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      await editMine(userInfos)
-      message("更新信息成功", { type: "success" });
+      await editMine(userInfos).then(() => {
+        message("更新信息成功", { type: "success" });
+      });
     } else {
       console.log("error submit!", fields);
     }
@@ -159,7 +160,7 @@ getMine().then(res => {
       <el-form-item label="简介">
         <el-input
           v-model="userInfos.remark"
-          placeholder="请输入简介"
+          placeholder="请输入个人简介"
           type="textarea"
           :autosize="{ minRows: 6, maxRows: 8 }"
           maxlength="100"
