@@ -23,6 +23,7 @@ async function onCropper({ base64, blob, info }) {
   const resizeBase64 = await resizeImage(base64, 128, 128);
   infos.value = info;
   cropperImg.value = resizeBase64;
+  console.log("blob: ", blob);
   emit("cropper", { base64, blob, info });
 }
 

@@ -68,20 +68,17 @@ const handleClose = () => {
   isShow.value = false;
 };
 
-const onCropper = ({ info, blob, base64 }) => {
+const onCropper = ({ blob }) => {
   cropperBlob.value = blob;
-  console.log("info: ", info.base64);
-  console.log("base64: ", base64);
-}
+};
 
 const handleSubmitImage = () => {
-  console.log("cropRef", cropRef);
   console.log("cropperBlob->", cropperBlob);
   // 头像更新
-  const formData = createFormData({
-    files: new File([cropperBlob.value], "avatar")
-  });
-  console.log("formUpload", formData);
+  // const formData = createFormData({
+  //   files: new File([cropperBlob.value], "avatar")
+  // });
+  // console.log("files", files);
   // formUpload(formData)
   //   .then(({ success, data }) => {
   //     if (success) {
@@ -188,7 +185,7 @@ getMine().then(res => {
       :before-close="handleClose"
       :fullscreen="deviceDetection()"
     >
-      <ReCropperPreview :ref=cropRef :imgSrc="imgSrc" @cropper="onCropper" />
+      <ReCropperPreview :ref="cropRef" :imgSrc="imgSrc" @cropper="onCropper" />
       <template #footer>
         <div class="dialog-footer">
           <el-button bg text @click="handleClose">取消</el-button>
