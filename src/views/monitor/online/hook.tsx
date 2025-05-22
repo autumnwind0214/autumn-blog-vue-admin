@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { getOnlineLogsList } from "@/api/modules/system/system";
+import { getOnlineLogsList } from "@/api/system/system";
 import { reactive, ref, onMounted, toRaw } from "vue";
 import type { PaginationProps } from "@pureadmin/table";
 

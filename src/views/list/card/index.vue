@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getCardList } from "@/api/modules/system/list";
+// import { getCardList } from "@/api/system/list";
 import { message } from "@/utils/message";
 import { ElMessageBox } from "element-plus";
 import { ref, onMounted, nextTick } from "vue";
@@ -38,12 +38,12 @@ const dataLoading = ref(true);
 
 const getCardListData = async () => {
   try {
-    const { data } = await getCardList();
-    productList.value = data.list;
-    pagination.value = {
-      ...pagination.value,
-      total: data.list.length
-    };
+    // const { data } = await getCardList();
+    // productList.value = data.list;
+    // pagination.value = {
+    //   ...pagination.value,
+    //   total: data.list.length
+    // };
   } catch (e) {
     console.log(e);
   } finally {

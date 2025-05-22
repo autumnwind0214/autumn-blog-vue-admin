@@ -7,7 +7,7 @@ import { reactive, ref, onMounted, h } from "vue";
 import type { FormItemProps } from "../utils/types";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { cloneDeep, isAllEmpty, deviceDetection } from "@pureadmin/utils";
-import { addMenu, deleteMenu, editMenu, getMenuList } from "@/api/modules/system/menu";
+import { addMenu, deleteMenu, editMenu, getMenuList } from "@/api/system/menu";
 
 export function useMenu() {
   const form = reactive({

@@ -91,6 +91,8 @@ export default defineComponent({
     const inSrc = ref(props.src);
     const isReady = ref(false);
     const imgBase64 = ref();
+    // 原始文件名
+    const originalFileName = ref();
 
     let scaleX = 1;
     let scaleY = 1;
@@ -186,7 +188,11 @@ export default defineComponent({
           emit("cropper", {
             base64: e.target.result,
             blob,
-            info: { size: blob.size, ...cropper.value.getData() }
+            info: {
+              size: blob.size,
+              filename: originalFileName.value,
+              ...cropper.value.getData()
+            }
           });
         };
         fileReader.onerror = () => {
@@ -233,6 +239,7 @@ export default defineComponent({
     }
 
     function beforeUpload(file) {
+      originalFileName.value = file.name;
       const reader = new FileReader();
       reader.readAsDataURL(file);
       inSrc.value = "";

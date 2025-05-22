@@ -27,9 +27,9 @@ const IFrame = () => import("@/layout/frame.vue");
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
-import { getAsyncRoutes } from "@/api/modules/system/routes";
-import type { RouteVo } from "@/api/types/system/routes";
-import type { UserInfo } from "@/api/types/system/user";
+import { getAsyncRoutes } from "@/api/system/menu";
+import type { RouteVo } from "@/api/system/menu";
+import type { UserInfo } from "@/api/system/user";
 import { userKey } from "@/utils/auth";
 
 function handSort(routeInfo: any) {

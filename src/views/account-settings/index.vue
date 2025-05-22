@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMine } from "@/api/modules/system/user";
+import { getMine } from "@/api/system/user";
 import { useRouter } from "vue-router";
 import { ref, onBeforeMount } from "vue";
 import { ReText } from "@/components/ReText";

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { formUpload } from "@/api/modules/system/mock";
+import { formUpload } from "@/api/system/mock";
 import { message } from "@/utils/message";
-import { editMine, getMine } from "@/api/modules/system/user";
+import { editMine, getMine, uploadAvatarApi } from "@/api/system/user";
 import type { FormInstance, FormRules } from "element-plus";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import { createFormData, deviceDetection } from "@pureadmin/utils";
 import uploadLine from "~icons/ri/upload-line";
 import { UserInfo } from "@/api/types/system/user";
+import { uploadImg } from "@/api/media/upload";
 
 defineOptions({
   name: "Profile"
@@ -15,6 +16,8 @@ defineOptions({
 
 const imgSrc = ref("");
 const cropperBlob = ref();
+const cropperInfo = ref();
+const originalFileName = ref("");
 const cropRef = ref();
 const uploadRef = ref();
 const isShow = ref(false);
@@ -54,6 +57,7 @@ function queryEmail(queryString, callback) {
 }
 
 const onChange = uploadFile => {
+  originalFileName.value = uploadFile.name;
   const reader = new FileReader();
   reader.onload = e => {
     imgSrc.value = e.target.result as string;
@@ -68,29 +72,37 @@ const handleClose = () => {
   isShow.value = false;
 };
 
-const onCropper = ({ blob }) => {
+const onCropper = ({ blob, info }) => {
   cropperBlob.value = blob;
+  cropperInfo.value = info;
+  if (info.filename) {
+    originalFileName.value = info.filename;
+  }
 };
 
 const handleSubmitImage = () => {
-  console.log("cropperBlob->", cropperBlob);
   // 头像更新
-  // const formData = createFormData({
-  //   files: new File([cropperBlob.value], "avatar")
-  // });
-  // console.log("files", files);
-  // formUpload(formData)
-  //   .then(({ success, data }) => {
-  //     if (success) {
-  //       message("更新头像成功", { type: "success" });
-  //       handleClose();
-  //     } else {
-  //       message("更新头像失败");
-  //     }
-  //   })
-  //   .catch(error => {
-  //     message(`提交异常 ${error}`, { type: "error" });
-  //   });
+  const formData = createFormData({
+    files: new File([cropperBlob.value], originalFileName.value)
+  });
+  uploadImg(formData)
+    .then(async res => {
+      if (res) {
+        await uploadAvatarApi({
+          userId: userInfos.id,
+          reviewUrl: res.reviewUrl
+        }).then(() => {
+          message("更新头像成功", { type: "success" });
+          userInfos.avatar = res.reviewUrl;
+          handleClose();
+        });
+      } else {
+        message("更新头像失败");
+      }
+    })
+    .catch(error => {
+      message(`提交异常 ${error}`, { type: "error" });
+    });
 };
 
 // 更新信息
@@ -185,7 +197,7 @@ getMine().then(res => {
       :before-close="handleClose"
       :fullscreen="deviceDetection()"
     >
-      <ReCropperPreview :ref="cropRef" :imgSrc="imgSrc" @cropper="onCropper" />
+      <ReCropperPreview ref="cropRef" :imgSrc="imgSrc" @cropper="onCropper" />
       <template #footer>
         <div class="dialog-footer">
           <el-button bg text @click="handleClose">取消</el-button>

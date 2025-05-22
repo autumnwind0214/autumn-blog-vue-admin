@@ -18,7 +18,7 @@ import {
   getRoleMenuApi,
   getRoleMenuIdApi,
   roleAuthApi
-} from "@/api/modules/system/role";
+} from "@/api/system/role";
 import { getKeyList } from "@/store/utils";
 import { handleTree } from "@/utils/tree";
 

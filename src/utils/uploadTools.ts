@@ -4,7 +4,7 @@ import {
   checkFile,
   mergeChunks,
   uploadChunk
-} from "@/api/modules/media/upload";
+} from "@/api/media/upload";
 
 export const uploadByPieces = ({ file, pieceSize = 5, error }: any) => {
   // 上传过程中用到的变量

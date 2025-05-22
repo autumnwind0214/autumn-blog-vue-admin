@@ -2,6 +2,12 @@ import { http } from "@/utils/http";
 
 const prefix = "/media-service";
 
+export type UploadResult = {
+  reviewUrl: string;
+  originName: string;
+  filename: string;
+};
+
 export const checkFile = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/upload/checkFile`, { data });
 };
@@ -21,5 +27,10 @@ export const mergeChunks = (data?: object) => {
 };
 
 export const uploadImg = (data?: object) => {
-  return http.request<string>("post", `${prefix}/upload/img`, { data });
+  return http.request<UploadResult>("post", `${prefix}/upload/img`, {
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
 };

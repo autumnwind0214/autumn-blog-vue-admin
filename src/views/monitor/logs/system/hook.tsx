@@ -8,7 +8,7 @@ import { getKeyList, useCopyToClipboard } from "@pureadmin/utils";
 import {
   getSystemLogsList,
   getSystemLogsDetail
-} from "@/api/modules/system/system";
+} from "@/api/system/system";
 import Info from "~icons/ri/question-line";
 
 export function useRole(tableRef: Ref) {

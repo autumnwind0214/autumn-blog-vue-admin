@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { formUpload } from "@/api/modules/system/mock";
+import { formUpload } from "@/api/system/mock";
 import { message } from "@/utils/message";
 import { createFormData } from "@pureadmin/utils";
 

@@ -39,8 +39,8 @@ import {
   getUserList,
   getUserRoleIds,
   uploadAvatarApi
-} from "@/api/modules/system/user";
-import { getAllRoleListApi } from "@/api/modules/system/role";
+} from "@/api/system/user";
+import { getAllRoleListApi } from "@/api/system/role";
 import { encryptByAES } from "@/utils/auth";
 
 export function useUser(tableRef: Ref) {

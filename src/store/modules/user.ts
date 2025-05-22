@@ -17,7 +17,7 @@ import {
   refreshTokenApi
 } from "@/api/login";
 import type { UserInfo } from "@/api/types/system/user";
-import { getMine } from "@/api/modules/system/user";
+import { getMine } from "@/api/system/user";
 
 export const useUserStore = defineStore("pure-user", {
   state: (): userType => ({
