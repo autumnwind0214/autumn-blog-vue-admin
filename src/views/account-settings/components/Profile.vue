@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { formUpload } from "@/api/system/mock";
 import { message } from "@/utils/message";
 import { editMine, getMine, uploadAvatarApi } from "@/api/system/user";
 import type { FormInstance, FormRules } from "element-plus";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import { createFormData, deviceDetection } from "@pureadmin/utils";
 import uploadLine from "~icons/ri/upload-line";
-import { UserInfo } from "@/api/types/system/user";
+import { UserInfo } from "@/api/system/user";
 import { uploadImg } from "@/api/media/upload";
 
 defineOptions({
@@ -22,6 +21,8 @@ const cropRef = ref();
 const uploadRef = ref();
 const isShow = ref(false);
 const userInfoFormRef = ref<FormInstance>();
+
+const emit = defineEmits(["update:formData"]);
 
 const userInfos = reactive({
   id: null,
@@ -94,6 +95,7 @@ const handleSubmitImage = () => {
         }).then(() => {
           message("更新头像成功", { type: "success" });
           userInfos.avatar = res.reviewUrl;
+          emit("update:formData", userInfos);
           handleClose();
         });
       } else {
@@ -111,6 +113,7 @@ const onSubmit = async (formEl: FormInstance) => {
     if (valid) {
       await editMine(userInfos).then(() => {
         message("更新信息成功", { type: "success" });
+        emit("update:formData", userInfos);
       });
     } else {
       console.log("error submit!", fields);

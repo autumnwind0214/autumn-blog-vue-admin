@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMine } from "@/api/system/user";
+import { getMine, MineInfo } from "@/api/system/user";
 import { useRouter } from "vue-router";
 import { ref, onBeforeMount } from "vue";
 import { ReText } from "@/components/ReText";
@@ -27,6 +27,10 @@ const { $storage } = useGlobal<GlobalPropertiesApi>();
 onBeforeMount(() => {
   useDataThemeChange().dataThemeChange($storage.layout?.overallStyle);
 });
+
+const handleUserInfoChange = (data: MineInfo) => {
+  userInfo.value = data;
+};
 
 const userInfo = ref({
   id: null,
@@ -63,7 +67,8 @@ const panes = [
 const witchPane = ref("profile");
 
 getMine().then(res => {
-  userInfo.value = res;
+  Object.assign(userInfo, res);
+  // userInfo.value = res;
 });
 </script>
 
@@ -109,7 +114,9 @@ getMine().then(res => {
           "
         >
           <div class="flex items-center z-10">
-            <el-icon><IconifyIconOffline :icon="item.icon" /></el-icon>
+            <el-icon>
+              <IconifyIconOffline :icon="item.icon" />
+            </el-icon>
             <span>{{ item.label }}</span>
           </div>
         </el-menu-item>
@@ -125,6 +132,7 @@ getMine().then(res => {
       <component
         :is="panes.find(item => item.key === witchPane).component"
         :class="[!deviceDetection() && 'ml-[120px]']"
+        @update:formData="handleUserInfoChange"
       />
     </el-main>
   </el-container>

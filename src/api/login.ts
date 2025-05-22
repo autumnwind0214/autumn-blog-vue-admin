@@ -76,7 +76,7 @@ export const getCaptcha = () => {
 };
 
 // 获取访问令牌
-export const getAccessToken = (data: any) => {
+export const getAccessTokenApi = (data: any) => {
   const headers: any = {
     "Content-Type": "application/x-www-form-urlencoded"
   };

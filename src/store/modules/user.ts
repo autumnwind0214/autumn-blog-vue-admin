@@ -12,19 +12,21 @@ import { useMultiTagsStoreHook } from "./multiTags";
 import { setToken, removeToken, userKey } from "@/utils/auth";
 import {
   type AccessToken,
-  getAccessToken,
-  getLogin,
+  getAccessTokenApi,
+  getLogin, logoutApi,
   refreshTokenApi
 } from "@/api/login";
-import type { UserInfo } from "@/api/types/system/user";
+import type { UserInfo } from "@/api/system/user";
 import { getMine } from "@/api/system/user";
 
 export const useUserStore = defineStore("pure-user", {
   state: (): userType => ({
+    //id
+    id: storageLocal().getItem<UserInfo>(userKey)?.id ?? 0,
     // 头像
     avatar: storageLocal().getItem<UserInfo>(userKey)?.avatar ?? "",
     // 用户名
-    username: storageLocal().getItem<UserInfo>(userKey)?.account ?? "",
+    username: storageLocal().getItem<UserInfo>(userKey)?.username ?? "",
     // 昵称
     nickname: storageLocal().getItem<UserInfo>(userKey)?.nickname ?? "",
     // 页面级别权限
@@ -41,6 +43,10 @@ export const useUserStore = defineStore("pure-user", {
     loginDay: 7
   }),
   actions: {
+    /** 存储ID */
+    SET_ID(id: number) {
+      this.id = id;
+    },
     /** 存储头像 */
     SET_AVATAR(avatar: string) {
       this.avatar = avatar;
@@ -91,12 +97,13 @@ export const useUserStore = defineStore("pure-user", {
       });
     },
     /** 前端登出（不调用接口） */
-    logOut() {
+    async logOut() {
+      await logoutApi();
       this.username = "";
       this.roles = [];
       this.permissions = [];
       removeToken();
-      useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+      useMultiTagsStoreHook().handleTags("equal", [ ...routerArrays ]);
       resetRouter();
       router.push("/login");
     },
@@ -105,7 +112,7 @@ export const useUserStore = defineStore("pure-user", {
       data.client_id = import.meta.env.VITE_OAUTH_CLIENT_ID;
       data.client_secret = import.meta.env.VITE_OAUTH_CLIENT_SECRET;
       return new Promise<AccessToken>((resolve, reject) => {
-        getAccessToken(data)
+        getAccessTokenApi(data)
           .then(data => {
             if (data) {
               setToken(data);

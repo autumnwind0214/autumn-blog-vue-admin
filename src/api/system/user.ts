@@ -10,6 +10,8 @@ export type LoginUser = {
 };
 
 export type UserInfo = {
+  /** id */
+  id: number;
   /** 头像 */
   avatar: string;
   /** 用户名 */
@@ -43,7 +45,7 @@ export const getUserInfoApi = (id?: number) => {
 
 /** 账户设置-个人信息 */
 export const getMine = () => {
-  return http.request<MineInfo>("get", `${prefix}/user/mine`, {});
+  return http.request<UserInfo>("get", `${prefix}/user/mine`, {});
 };
 
 /** todo 账户设置-个人安全日志 */

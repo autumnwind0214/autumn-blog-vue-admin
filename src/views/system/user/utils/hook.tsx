@@ -42,6 +42,8 @@ import {
 } from "@/api/system/user";
 import { getAllRoleListApi } from "@/api/system/role";
 import { encryptByAES } from "@/utils/auth";
+import { uploadImgBase64Api } from "@/api/media/upload";
+import { useUserStoreHook } from "@/store/modules/user";
 
 export function useUser(tableRef: Ref) {
   const form = reactive({
@@ -79,8 +81,8 @@ export function useUser(tableRef: Ref) {
       }
     },
     {
-      label: "用户编号",
-      prop: "id",
+      label: "序号",
+      type: "index",
       width: 90
     },
     {
@@ -408,14 +410,18 @@ export function useUser(tableRef: Ref) {
           onCropper: info => (avatarInfo.value = info)
         }),
       beforeSure: async done => {
-        await uploadAvatarApi({
-          userId: row.id,
-          avatar: avatarInfo.value.base64
-        }).then(() => {
-          message("修改头像成功", { type: "success" });
-        });
-        done(); // 关闭弹框
-        onSearch(); // 刷新表格数据
+        await uploadImgBase64Api({ base64: avatarInfo.value.base64 }).then(
+          async res => {
+            await uploadAvatarApi({
+              userId: row.id,
+              reviewUrl: res.reviewUrl
+            }).then(() => {
+              message("修改头像成功", { type: "success" });
+            });
+            done(); // 关闭弹框
+            onSearch(); // 刷新表格数据
+          }
+        );
       },
       closeCallBack: () => cropRef.value.hidePopover()
     });

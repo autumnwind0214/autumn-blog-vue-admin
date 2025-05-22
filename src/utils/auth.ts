@@ -4,7 +4,7 @@ import { storageLocal, isString, isIncludeAllChildren } from "@pureadmin/utils";
 import CryptoJS from "crypto-js";
 import type { AccessToken } from "@/api/login";
 import { jwtDecode } from "jwt-decode";
-import type { UserInfo } from "@/api/types/system/user";
+import type { UserInfo } from "@/api/system/user";
 import type { DecodeToken } from "@/api/login";
 
 export const userKey = "user-info";
@@ -64,6 +64,7 @@ export function setToken(data: AccessToken) {
     .handGetUserInfo()
     .then((res: UserInfo) => {
       setUserKey({
+        id: res.id,
         avatar: res.avatar,
         username: res.username,
         nickname: res.nickname,
@@ -71,7 +72,8 @@ export function setToken(data: AccessToken) {
       });
     });
 
-  function setUserKey({ avatar, username, nickname, permissions }) {
+  function setUserKey({ id, avatar, username, nickname, permissions }) {
+    useUserStoreHook().SET_ID(id);
     useUserStoreHook().SET_AVATAR(avatar);
     useUserStoreHook().SET_USERNAME(username);
     useUserStoreHook().SET_NICKNAME(nickname);

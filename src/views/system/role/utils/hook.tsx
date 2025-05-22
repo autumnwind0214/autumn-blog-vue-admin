@@ -54,8 +54,9 @@ export function useRole(treeRef: Ref) {
   });
   const columns: TableColumnList = [
     {
-      label: "角色编号",
-      prop: "id"
+      label: "序号",
+      width: 60,
+      type: "index"
     },
     {
       label: "角色名称",

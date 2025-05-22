@@ -78,7 +78,12 @@ class PureHttp {
           return config;
         }
         /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
-        const whiteList = ["/auth-api/oauth2/token", "/login", "/auth-api/logout", "/auth-api/getCaptcha"];
+        const whiteList = [
+          "/auth-api/oauth2/token",
+          "/login",
+          "/auth-api/logout",
+          "/auth-api/getCaptcha"
+        ];
         return whiteList.some(url => config.url.endsWith(url))
           ? config
           : new Promise(resolve => {
@@ -138,7 +143,7 @@ class PureHttp {
         NProgress.done();
         if (response.data.code !== SUCCESS) {
           checkStatus(response.data.code, response.data.message);
-          throw new Error("请求失败，请稍后重试");
+          throw new Error("请求失败，请稍后重试: ", response.data);
         }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {

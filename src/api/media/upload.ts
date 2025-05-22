@@ -34,3 +34,12 @@ export const uploadImg = (data?: object) => {
     }
   });
 };
+
+export const uploadImgBase64Api = (data?: object) => {
+  return http.request<UploadResult>("post", `${prefix}/upload/imgBase64`, {
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
