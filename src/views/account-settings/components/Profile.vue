@@ -7,7 +7,7 @@ import ReCropperPreview from "@/components/ReCropperPreview";
 import { createFormData, deviceDetection } from "@pureadmin/utils";
 import uploadLine from "~icons/ri/upload-line";
 import { UserInfo } from "@/api/system/user";
-import { uploadImg } from "@/api/media/upload";
+import { uploadFile } from "@/api/media/upload";
 
 defineOptions({
   name: "Profile"
@@ -86,7 +86,7 @@ const handleSubmitImage = () => {
   const formData = createFormData({
     files: new File([cropperBlob.value], originalFileName.value)
   });
-  uploadImg(formData)
+  uploadFile(formData)
     .then(async res => {
       if (res) {
         await uploadAvatarApi({

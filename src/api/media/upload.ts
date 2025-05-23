@@ -26,8 +26,8 @@ export const mergeChunks = (data?: object) => {
   });
 };
 
-export const uploadImg = (data?: object) => {
-  return http.request<UploadResult>("post", `${prefix}/upload/img`, {
+export const uploadFile = (data?: object) => {
+  return http.request<UploadResult>("post", `${prefix}/upload/file`, {
     data,
     headers: {
       "Content-Type": "multipart/form-data"
