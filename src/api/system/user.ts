@@ -44,37 +44,37 @@ export const getUserInfoApi = (id?: number) => {
 };
 
 /** 账户设置-个人信息 */
-export const getMine = () => {
+export const getMineApi = () => {
   return http.request<UserInfo>("get", `${prefix}/user/mine`, {});
 };
 
 /** todo 账户设置-个人安全日志 */
-export const getMineLogs = (data?: object) => {
+export const getMineLogsApi = (data?: object) => {
   return http.request<ResultTable>("get", "/mine-logs", { data });
 };
 
 /** 账户设置-修改信息  */
-export const editMine = (data?: object) => {
+export const editMineApi = (data?: object) => {
   return http.request<boolean>("put", `${prefix}/user/mine`, { data });
 };
 
 /** 用户管理-列表 */
-export const getUserList = (data?: object) => {
+export const getUserListApi = (data?: object) => {
   return http.request<ResultTable>("post", `${prefix}/user/listPage`, { data });
 };
 
 /** 用户管理-新增 */
-export const addUser = (data?: object) => {
+export const addUserApi = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/user`, { data });
 };
 
 /** 用户管理-编辑 */
-export const editUser = (data?: object) => {
+export const editUserApi = (data?: object) => {
   return http.request<boolean>("put", `${prefix}/user`, { data });
 };
 
 /** 用户管理-修改状态 */
-export const editUserStatus = (id: number, status: number) => {
+export const editUserStatusApi = (id: number, status: number) => {
   return http.request<boolean>(
     "put",
     `${prefix}/user/status/${id}/${status}`,
@@ -83,19 +83,19 @@ export const editUserStatus = (id: number, status: number) => {
 };
 
 /** 用户管理-删除 */
-export const deleteUser = (ids: Array<number>) => {
+export const deleteUserApi = (ids: Array<number>) => {
   return http.request<boolean>("delete", `${prefix}/user/${ids}`, {});
 };
 
 /** 用户管理-重置密码 */
-export const changePassword = (data?: object) => {
+export const changePasswordApi = (data?: object) => {
   return http.request<boolean>("put", `${prefix}/user/changePassword`, {
     data
   });
 };
 
 /** 用户管理-用户角色 */
-export const getUserRoleIds = (userId?: object) => {
+export const getUserRoleIdsApi = (userId?: object) => {
   return http.request<Array<number>>(
     "get",
     `${prefix}/user/roleIds/${userId}`,

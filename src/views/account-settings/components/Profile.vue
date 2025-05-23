@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { message } from "@/utils/message";
-import { editMine, getMine, uploadAvatarApi } from "@/api/system/user";
+import { editMineApi, getMineApi, uploadAvatarApi } from "@/api/system/user";
 import type { FormInstance, FormRules } from "element-plus";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import { createFormData, deviceDetection } from "@pureadmin/utils";
 import uploadLine from "~icons/ri/upload-line";
 import { UserInfo } from "@/api/system/user";
-import { uploadFile } from "@/api/media/upload";
+import { uploadFileApi } from "@/api/media/upload";
 
 defineOptions({
   name: "Profile"
@@ -86,7 +86,7 @@ const handleSubmitImage = () => {
   const formData = createFormData({
     files: new File([cropperBlob.value], originalFileName.value)
   });
-  uploadFile(formData)
+  uploadFileApi(formData)
     .then(async res => {
       if (res) {
         await uploadAvatarApi({
@@ -111,7 +111,7 @@ const handleSubmitImage = () => {
 const onSubmit = async (formEl: FormInstance) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      await editMine(userInfos).then(() => {
+      await editMineApi(userInfos).then(() => {
         message("更新信息成功", { type: "success" });
         emit("update:formData", userInfos);
       });
@@ -121,7 +121,7 @@ const onSubmit = async (formEl: FormInstance) => {
   });
 };
 
-getMine().then(res => {
+getMineApi().then(res => {
   Object.assign(userInfos, res);
 });
 </script>

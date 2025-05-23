@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMine, MineInfo } from "@/api/system/user";
+import { getMineApi, MineInfo } from "@/api/system/user";
 import { useRouter } from "vue-router";
 import { ref, onBeforeMount } from "vue";
 import { ReText } from "@/components/ReText";
@@ -66,7 +66,7 @@ const panes = [
 ];
 const witchPane = ref("profile");
 
-getMine().then(res => {
+getMineApi().then(res => {
   Object.assign(userInfo, res);
   // userInfo.value = res;
 });

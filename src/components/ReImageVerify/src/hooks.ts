@@ -1,5 +1,5 @@
 import { onMounted, ref } from "vue";
-import { getCaptcha } from "@/api/login";
+import { getCaptchaApi } from "@/api/login";
 
 /**
  * 绘制图形验证码
@@ -17,7 +17,7 @@ export const useImageVerify = (width = 120, height = 40) => {
 
   function getImgCode() {
     if (!domRef.value) return;
-    getCaptcha().then((result: any) => {
+    getCaptchaApi().then((result: any) => {
       imgCode.value = result.code;
       captchaId.value = result.captchaId;
       draw(domRef.value, width, height, imgCode.value);

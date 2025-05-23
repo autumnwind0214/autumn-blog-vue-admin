@@ -8,25 +8,25 @@ export type UploadResult = {
   filename: string;
 };
 
-export const checkFile = (data?: object) => {
+export const checkFileApi = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/upload/checkFile`, { data });
 };
 
-export const checkChunk = (data?: object) => {
+export const checkChunkApi = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/upload/checkChunk`, { data });
 };
 
-export const uploadChunk = (data?: object) => {
+export const uploadChunkApi = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/upload/chunk`, { data });
 };
 
-export const mergeChunks = (data?: object) => {
+export const mergeChunksApi = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/upload/mergeChunks`, {
     data
   });
 };
 
-export const uploadFile = (data?: object) => {
+export const uploadFileApi = (data?: object) => {
   return http.request<UploadResult>("post", `${prefix}/upload/file`, {
     data,
     headers: {

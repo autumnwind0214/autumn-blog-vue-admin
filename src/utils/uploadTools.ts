@@ -1,9 +1,9 @@
 import SparkMD5 from "spark-md5";
 import {
-  checkChunk,
-  checkFile,
-  mergeChunks,
-  uploadChunk
+  checkChunkApi,
+  checkFileApi,
+  mergeChunksApi,
+  uploadChunkApi
 } from "@/api/media/upload";
 
 export const uploadByPieces = ({ file, pieceSize = 5, error }: any) => {
@@ -41,7 +41,7 @@ export const uploadByPieces = ({ file, pieceSize = 5, error }: any) => {
           // fileExt:file.name.split('.').at(-1)
         };
         // 上传前提交注册 - 接口调用
-        checkFile(params)
+        checkFileApi(params)
           .then(() => {})
           .catch(err => error(err));
       } else {
@@ -65,14 +65,14 @@ export const uploadByPieces = ({ file, pieceSize = 5, error }: any) => {
       const chunk = getChunkInfo(file, num, chunkSize);
       // 上传分块前检查
       //await checkchunk({fileMd5:fileMD5,chunk:num,chunkSize:chunkCount}).then( async res => {
-      await checkChunk({ fileMd5: fileMD5, chunk: num }).then(async res => {
+      await checkChunkApi({ fileMd5: fileMD5, chunk: num }).then(async res => {
         if (res) {
           // 分块上传
           const fetchForm = new FormData();
           fetchForm.append("file", chunk);
           fetchForm.append("fileMd5", fileMD5);
           fetchForm.append("chunk", num);
-          await uploadChunk(fetchForm).then(async () => {
+          await uploadChunkApi(fetchForm).then(async () => {
             // 上传成功
             readChunkMD5(num + 1);
           });
@@ -84,7 +84,7 @@ export const uploadByPieces = ({ file, pieceSize = 5, error }: any) => {
     } else {
       // 上传结束请求合并
       // 提交合并
-      mergeChunks({
+      mergeChunksApi({
         fileMd5: fileMD5,
         fileName: file.name,
         chunkTotal: chunkCount

@@ -13,11 +13,12 @@ import { setToken, removeToken, userKey } from "@/utils/auth";
 import {
   type AccessToken,
   getAccessTokenApi,
-  getLogin, logoutApi,
+  getLoginApi,
+  logoutApi,
   refreshTokenApi
 } from "@/api/login";
 import type { UserInfo } from "@/api/system/user";
-import { getMine } from "@/api/system/user";
+import { getMineApi } from "@/api/system/user";
 
 export const useUserStore = defineStore("pure-user", {
   state: (): userType => ({
@@ -86,7 +87,7 @@ export const useUserStore = defineStore("pure-user", {
     /** 登入 */
     async loginByUsername(data) {
       return new Promise((resolve, reject) => {
-        getLogin(data)
+        getLoginApi(data)
           .then(data => {
             // if (data?.success) setToken(data.data);
             resolve(data);
@@ -103,7 +104,7 @@ export const useUserStore = defineStore("pure-user", {
       this.roles = [];
       this.permissions = [];
       removeToken();
-      useMultiTagsStoreHook().handleTags("equal", [ ...routerArrays ]);
+      useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
       router.push("/login");
     },
@@ -142,7 +143,7 @@ export const useUserStore = defineStore("pure-user", {
     /** 获取用户信息 */
     async handGetUserInfo() {
       return new Promise<UserInfo>((resolve, reject) => {
-        getMine()
+        getMineApi()
           .then(data => {
             if (data) {
               resolve(data);

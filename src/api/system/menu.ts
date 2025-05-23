@@ -54,26 +54,26 @@ export type Meta = {
   roles: [];
 };
 
-export const getAsyncRoutes = () => {
+export const getAsyncRoutesApi = () => {
   return http.request<Array<RouteVo>>("get", `${prefix}/menu/getAsyncRoutes`);
 };
 
 /** 系统管理-菜单管理-列表 */
-export const getMenuList = () => {
+export const getMenuListApi = () => {
   return http.request<Array<MenuVo>>("get", `${prefix}/menu/list`);
 };
 
 /** 系统管理-菜单管理-新增 */
-export const addMenu = (data?: object) => {
+export const addMenuApi = (data?: object) => {
   return http.request<boolean>("post", `${prefix}/menu`, { data });
 };
 
 /** 系统管理-菜单管理-修改 */
-export const editMenu = (data?: object) => {
+export const editMenuApi = (data?: object) => {
   return http.request<boolean>("put", `${prefix}/menu`, { data });
 };
 
 /** 系统管理-菜单管理-删除 */
-export const deleteMenu = (id?: object) => {
+export const deleteMenuApi = (id?: object) => {
   return http.request<boolean>("delete", `${prefix}/menu/${id}`);
 };

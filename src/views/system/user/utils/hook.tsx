@@ -29,21 +29,20 @@ import {
   onMounted
 } from "vue";
 import {
-  addUser,
+  addUserApi,
   assignRoleApi,
-  changePassword,
-  deleteUser,
-  editUser,
-  editUserStatus,
+  changePasswordApi,
+  deleteUserApi,
+  editUserApi,
+  editUserStatusApi,
   getUserInfoApi,
-  getUserList,
-  getUserRoleIds,
+  getUserListApi,
+  getUserRoleIdsApi,
   uploadAvatarApi
 } from "@/api/system/user";
 import { getAllRoleListApi } from "@/api/system/role";
 import { encryptByAES } from "@/utils/auth";
 import { uploadImgBase64Api } from "@/api/media/upload";
-import { useUserStoreHook } from "@/store/modules/user";
 
 export function useUser(tableRef: Ref) {
   const form = reactive({
@@ -242,7 +241,7 @@ export function useUser(tableRef: Ref) {
             loading: true
           }
         );
-        await editUserStatus(row?.id ?? null, row?.status ?? 0)
+        await editUserStatusApi(row?.id ?? null, row?.status ?? 0)
           .then(() => {
             setTimeout(() => {
               message("已成功修改用户状态", {
@@ -271,7 +270,7 @@ export function useUser(tableRef: Ref) {
   }
 
   async function handleDelete(row) {
-    await deleteUser(row.id).then(() => {
+    await deleteUserApi(row.id).then(() => {
       message(`您删除了用户编号为${row.id}的这条数据`, { type: "success" });
     });
     onSearch();
@@ -303,7 +302,7 @@ export function useUser(tableRef: Ref) {
   async function onBatchDel() {
     // 返回当前选中的行
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
-    await deleteUser(getKeyList(curSelected, "id")).then(() => {
+    await deleteUserApi(getKeyList(curSelected, "id")).then(() => {
       // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
       message(`已删除用户编号为 ${getKeyList(curSelected, "id")} 的数据`, {
         type: "success"
@@ -315,7 +314,7 @@ export function useUser(tableRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    await getUserList(toRaw(form))
+    await getUserListApi(toRaw(form))
       .then(data => {
         dataList.value = data.records;
         pagination.total = data.total;
@@ -381,11 +380,11 @@ export function useUser(tableRef: Ref) {
             // 表单规则校验通过
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
-              await addUser(curData);
+              await addUserApi(curData);
               chores();
             } else {
               // 实际开发先调用修改接口，再进行下面操作
-              await editUser(curData);
+              await editUserApi(curData);
               chores();
             }
           }
@@ -521,7 +520,7 @@ export function useUser(tableRef: Ref) {
       beforeSure: done => {
         ruleFormRef.value.validate(async valid => {
           if (valid) {
-            await changePassword({
+            await changePasswordApi({
               userId: row.id,
               password: encryptByAES(pwdForm.newPwd),
               confirmPwd: encryptByAES(pwdForm.confirmPwd)
@@ -544,7 +543,7 @@ export function useUser(tableRef: Ref) {
   /** 分配角色 */
   async function handleRole(row) {
     // 选中的角色列表
-    const ids = (await getUserRoleIds(row.id)) ?? [];
+    const ids = (await getUserRoleIdsApi(row.id)) ?? [];
     addDialog({
       title: `分配 ${row.username} 用户的角色`,
       props: {

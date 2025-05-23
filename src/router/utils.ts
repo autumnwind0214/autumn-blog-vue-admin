@@ -27,7 +27,7 @@ const IFrame = () => import("@/layout/frame.vue");
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
-import { getAsyncRoutes } from "@/api/system/menu";
+import { getAsyncRoutesApi } from "@/api/system/menu";
 import type { RouteVo } from "@/api/system/menu";
 import type { UserInfo } from "@/api/system/user";
 import { userKey } from "@/utils/auth";
@@ -207,7 +207,7 @@ function initRouter() {
       });
     } else {
       return new Promise(resolve => {
-        getAsyncRoutes().then((data: Array<RouteVo>) => {
+        getAsyncRoutesApi().then((data: Array<RouteVo>) => {
           handleAsyncRoutes(cloneDeep(data));
           storageLocal().setItem(key, data);
           resolve(router);
@@ -216,7 +216,7 @@ function initRouter() {
     }
   } else {
     return new Promise(resolve => {
-      getAsyncRoutes().then((data: Array<RouteVo>) => {
+      getAsyncRoutesApi().then((data: Array<RouteVo>) => {
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });

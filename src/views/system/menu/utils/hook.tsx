@@ -7,7 +7,12 @@ import { reactive, ref, onMounted, h } from "vue";
 import type { FormItemProps } from "../utils/types";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { cloneDeep, isAllEmpty, deviceDetection } from "@pureadmin/utils";
-import { addMenu, deleteMenu, editMenu, getMenuList } from "@/api/system/menu";
+import {
+  addMenuApi,
+  deleteMenuApi,
+  editMenuApi,
+  getMenuListApi
+} from "@/api/system/menu";
 
 export function useMenu() {
   const form = reactive({
@@ -107,7 +112,7 @@ export function useMenu() {
   async function onSearch() {
     loading.value = true;
     // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parentId，parentId取父节点id
-    let data = await getMenuList();
+    let data = await getMenuListApi();
     if (!isAllEmpty(form.title)) {
       // 前端搜索菜单名称
       data = data.filter(item =>
@@ -186,11 +191,11 @@ export function useMenu() {
             // 表单规则校验通过
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
-              await addMenu(curData);
+              await addMenuApi(curData);
               chores();
             } else {
               // 实际开发先调用修改接口，再进行下面操作
-              await editMenu(curData);
+              await editMenuApi(curData);
               chores();
             }
           }
@@ -200,7 +205,7 @@ export function useMenu() {
   }
 
   async function handleDelete(row) {
-    const result = await deleteMenu(row.id);
+    const result = await deleteMenuApi(row.id);
     if (!result) return;
     message(`您删除了菜单名称为${transformI18n(row.title)}的这条数据`, {
       type: "success"

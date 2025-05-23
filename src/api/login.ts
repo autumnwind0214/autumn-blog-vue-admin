@@ -42,7 +42,7 @@ export type Captcha = {
 };
 
 /** 登录 */
-export const getLogin = (data?: object) => {
+export const getLoginApi = (data?: object) => {
   return http.post(`${prefix}/login`, {
     data,
     headers: {
@@ -71,7 +71,7 @@ export const refreshTokenApi = (data?: any) => {
 };
 
 // 获取图形验证码
-export const getCaptcha = () => {
+export const getCaptchaApi = () => {
   return http.request<Captcha>("get", `${prefix}/getCaptcha`, {});
 };
 
